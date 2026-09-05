@@ -3,8 +3,8 @@
         <div class="flex items-center justify-between">
             <!-- Logo & Weather -->
             <div class="flex items-center gap-6">
-                <a href="/" class="text-4xl font-display font-black text-ink tracking-tighter relative z-50 hover:opacity-80 transition-opacity">
-                    Indore<span class="text-city-accent">.</span>
+                <a href="/" class="relative z-50 hover:opacity-80 transition-opacity">
+                    <img src="{{ asset('images/logo.png') }}" alt="Indore Logo" class="h-10 w-auto">
                 </a>
                 
                 <!-- Weather / Date (Desktop only) -->

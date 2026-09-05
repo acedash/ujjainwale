@@ -12,7 +12,7 @@
 <footer class="border-t border-newsprint py-12 bg-white">
     <div class="max-w-7xl mx-auto px-8 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-            <h3 class="font-display font-bold text-xl mb-4">Indore.</h3>
+            <img src="{{ asset('images/logo.png') }}" alt="Indore Logo" class="h-10 w-auto mb-4 grayscale hover:grayscale-0 transition-all opacity-80 hover:opacity-100">
             <p class="font-sans text-sm text-gray-600">The premier local news and business directory for the city.</p>
         </div>
         <div>
