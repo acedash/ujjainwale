@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h2 class="font-display font-bold text-2xl text-ink">
-                    <span class="text-city-accent mr-2">|</span>Trending Elsewhere
+                    <span class="text-city-accent mr-2">|</span>Trending
                 </h2>
                 <p class="font-sans text-sm text-gray-500 mt-1">Headlines from other local news sources, updated automatically.</p>
             </div>
