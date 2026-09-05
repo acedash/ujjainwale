@@ -19,6 +19,7 @@
 
             <!-- Desktop Nav -->
             <nav class="hidden md:flex items-center space-x-5 lg:space-x-8 font-sans font-bold text-xs uppercase tracking-widest relative z-50">
+                <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors">Home</a>
                 
                 <!-- Categories Dropdown -->
                 <div x-data="{ open: false }" @mouseleave="open = false" class="relative">
@@ -92,6 +93,7 @@
              x-transition:leave-end="opacity-0 -translate-y-4"
              class="absolute top-full left-0 w-full bg-paper border-b border-newsprint shadow-xl z-40 md:hidden">
             <nav class="flex flex-col font-sans font-medium p-6 space-y-4">
+                <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Home</a>
                 <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">News</a>
                 <a href="{{ route('home') }}#trending" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Trending</a>
                 <a href="{{ route('directory') }}" class="text-directory-blue hover:opacity-80 transition-opacity text-lg border-b border-newsprint pb-2">Local Businesses</a>
