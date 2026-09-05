@@ -40,6 +40,8 @@ class FetchExternalHeadlines extends Command
                     $guid = $item->get_id();
                     if (empty($guid)) {
                         $guid = hash('sha256', $item->get_permalink() ?? $item->get_title());
+                    } elseif (strlen($guid) > 250) {
+                        $guid = hash('sha256', $guid);
                     }
 
                     if (\App\Models\ExternalHeadline::where('guid', $guid)->exists()) {
