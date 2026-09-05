@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Tags\HasTags;
+use App\Jobs\PostArticleToFacebook;
 
 class Article extends Model implements HasMedia
 {
@@ -35,6 +36,20 @@ class Article extends Model implements HasMedia
         static::saving(function ($article) {
             if ($article->status === 'published' && is_null($article->published_at)) {
                 $article->published_at = now();
+            }
+        });
+
+        static::saved(function ($article) {
+            // Check if it was just published and is set to post to facebook
+            if (
+                $article->status === 'published' &&
+                $article->post_to_facebook &&
+                !$article->posted_to_facebook
+            ) {
+                // If the status just changed to published in this request, dispatch the job
+                if ($article->wasChanged('status') || $article->wasRecentlyCreated) {
+                    PostArticleToFacebook::dispatch($article);
+                }
             }
         });
     }

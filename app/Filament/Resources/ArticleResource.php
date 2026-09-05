@@ -117,6 +117,10 @@ class ArticleResource extends Resource
                                     ->label('Published at')
                                     ->content('Will be published immediately when saved')
                                     ->visible(fn (Get $get) => $get('status') === 'published'),
+                                Forms\Components\Toggle::make('post_to_facebook')
+                                    ->label('Post to Facebook Page')
+                                    ->default(false)
+                                    ->helperText('If checked, this article will be posted to the official Facebook page when published.'),
                                 Forms\Components\Toggle::make('is_featured')
                                     ->label('Featured Hero Article')
                                     ->helperText('If enabled, this article may be prioritized in the homepage hero section.'),

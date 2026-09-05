@@ -7,6 +7,7 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NeighborhoodController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialiteController;
 use App\Livewire\AcceptInvite;
 use App\Livewire\BusinessDirectory;
 use App\Livewire\RegisterBusiness;
@@ -20,6 +21,9 @@ Route::get('/feed.xml', [FeedController::class, 'rss'])->name('feed');
 
 Route::get('/category/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/neighborhood/{neighborhood:slug}', [NeighborhoodController::class, 'show'])->name('neighborhoods.show');
+
+Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
+Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
 
 Route::get('/directory', BusinessDirectory::class)->name('directory');
 Route::get('/directory/register', RegisterBusiness::class)->name('directory.register');
