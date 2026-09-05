@@ -4,7 +4,16 @@
     <div class="absolute right-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-l from-ink to-transparent pointer-events-none">
     </div>
 
-    <div class="flex w-max whitespace-nowrap animate-marquee hover:[animation-play-state:paused]">
+    <style>
+        @keyframes custom-marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-custom-marquee {
+            animation: custom-marquee 40s linear infinite;
+        }
+    </style>
+    <div class="flex w-max whitespace-nowrap animate-custom-marquee hover:[animation-play-state:paused]">
         <!-- Double the content for seamless looping -->
         @for($i = 0; $i < 2; $i++)
             <div class="flex items-center space-x-8 px-4">
