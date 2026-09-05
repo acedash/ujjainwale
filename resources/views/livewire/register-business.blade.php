@@ -138,7 +138,7 @@
                                         </div>
                                     </div>
                                     <div class="pt-2 mt-4">
-                                        <button type="button" @click="navigator.geolocation.getCurrentPosition(pos => { lat = pos.coords.latitude; lng = pos.coords.longitude; }, err => alert('Could not get location. Please ensure location permissions are granted or enter manually.'));" class="text-sm font-sans font-bold text-city-accent hover:text-ink transition-colors flex items-center gap-1.5 bg-white py-2 px-4 rounded border border-gray-200 shadow-sm w-max">
+                                        <button type="button" @click="navigator.geolocation.getCurrentPosition(pos => { $data.lat = pos.coords.latitude; $data.lng = pos.coords.longitude; }, err => alert('Could not get location. Please ensure location permissions are granted or enter manually.'));" class="text-sm font-sans font-bold text-city-accent hover:text-ink transition-colors flex items-center gap-1.5 bg-white py-2 px-4 rounded border border-gray-200 shadow-sm w-max">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                             Get Current Location
                                         </button>
