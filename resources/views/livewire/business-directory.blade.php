@@ -48,7 +48,6 @@
                     </select>
                 </div>
             </div>
-        </div>
 
         <!-- Business List -->
         <div class="flex-grow overflow-y-auto p-0 relative" x-data="{ stagger: 0 }">
