@@ -10,8 +10,15 @@ class NewsTicker extends Component
 {
     public function render()
     {
-        // Get top 10 latest news items (original content only for cleaner ticker)
-        $headlines = Article::published()->latest('published_at')->take(10)->get();
+        $articles = Article::published()->latest('published_at')->take(10)->get();
+        $externalHeadlines = ExternalHeadline::latest('published_at')->take(10)->get();
+        
+        $headlines = $articles->concat($externalHeadlines)
+            ->sortByDesc(function ($item) {
+                return $item->published_at ?? $item->created_at;
+            })
+            ->take(10)
+            ->values();
         
         return view('livewire.news-ticker', [
             'headlines' => $headlines
