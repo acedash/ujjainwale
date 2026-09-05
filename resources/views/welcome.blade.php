@@ -2,7 +2,20 @@
     <x-neighborhood-strip :neighborhoods="$neighborhoods" />
     @livewire('news-ticker')
 
-    <div class="max-w-7xl mx-auto px-8 md:px-12 pt-4 pb-12">
+    <div class="max-w-7xl mx-auto px-8 md:px-12 pt-4 pb-12 relative">
+        <!-- Left ad rail -->
+        <div class="hidden xl:flex absolute right-full mr-6 top-0 h-full flex-col">
+            <div class="sticky top-[120px]">
+                <x-ad-space size="skyscraper" />
+            </div>
+        </div>
+        <!-- Right ad rail -->
+        <div class="hidden xl:flex absolute left-full ml-6 top-0 h-full flex-col">
+            <div class="sticky top-[120px]">
+                <x-ad-space size="skyscraper" />
+            </div>
+        </div>
+
         <!-- Hero & Secondary Section -->
         @if($heroItems->isNotEmpty() || $secondaryItems->isNotEmpty())
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
