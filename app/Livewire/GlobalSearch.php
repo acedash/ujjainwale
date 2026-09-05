@@ -17,6 +17,7 @@ class GlobalSearch extends Component
 
         if (strlen($this->search) >= 2) {
             $articles = Article::published()
+                ->with('media')
                 ->where(function ($query) {
                     $query->where('title', 'like', '%'.$this->search.'%')
                           ->orWhere('body', 'like', '%'.$this->search.'%');
@@ -25,7 +26,8 @@ class GlobalSearch extends Component
                 ->limit(5)
                 ->get();
 
-            $businesses = Business::where('name', 'like', '%'.$this->search.'%')
+            $businesses = Business::with('media')
+                ->where('name', 'like', '%'.$this->search.'%')
                 ->limit(5)
                 ->get();
         }
