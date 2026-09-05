@@ -51,9 +51,9 @@ class RegisterBusiness extends Component
             'lng' => 'required|numeric',
             'phone' => 'nullable|string|max:50',
             'website' => 'nullable|url|max:255',
-            'category_ids' => 'required|array|min:1',
+            'category_ids' => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
-            'neighborhood_ids' => 'required|array|min:1',
+            'neighborhood_ids' => 'nullable|array',
             'neighborhood_ids.*' => 'exists:neighborhoods,id',
             'logo' => 'nullable|image|max:2048', // 2MB max
             'cover' => 'nullable|image|max:5120', // 5MB max

@@ -167,7 +167,7 @@
                             
                             <div class="md:col-span-2 space-y-8">
                                 <div class="group">
-                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Categories <span class="text-city-accent">*</span></label>
+                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Categories</label>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                         @foreach($this->availableCategories as $category)
                                             <label class="flex items-center p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:border-city-accent hover:bg-red-50 transition-colors has-[:checked]:border-city-accent has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-city-accent">
@@ -180,7 +180,7 @@
                                 </div>
 
                                 <div class="group">
-                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Neighborhoods <span class="text-city-accent">*</span></label>
+                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Neighborhoods</label>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                         @foreach($this->availableNeighborhoods as $neighborhood)
                                             <label class="flex items-center p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:border-city-accent hover:bg-red-50 transition-colors has-[:checked]:border-city-accent has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-city-accent">
