@@ -1,7 +1,7 @@
 @props(['headlines'])
 
 @if($headlines->isNotEmpty())
-    <section class="mb-16 mt-8">
+    <section id="trending" class="mb-16 mt-8">
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h2 class="font-display font-bold text-3xl text-ink">
