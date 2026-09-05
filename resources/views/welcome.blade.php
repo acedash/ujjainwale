@@ -129,6 +129,11 @@
 </script>
 @endpushonce
 
+        <!-- Trending (External Aggregation) moved below hero -->
+        <div class="mt-8 mb-16">
+            <x-trending-elsewhere :headlines="$externalHeadlines" />
+        </div>
+        
         <hr class="border-newsprint my-12">
 
         <!-- Category Rails -->
@@ -238,11 +243,6 @@
                     </div>
                 </section>
             @endif
-        </div>
-        
-        <!-- Trending Elsewhere (External Aggregation) -->
-        <div class="mt-16 mb-8">
-            <x-trending-elsewhere :headlines="$externalHeadlines" />
         </div>
     </div>
 </x-app-layout>
