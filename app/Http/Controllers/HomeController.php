@@ -39,14 +39,12 @@ class HomeController extends Controller
                 ->take($remainingSlots)
                 ->get();
 
-            // If we already have 1 external in the hero, don't fetch any more
-            $latestExternal = collect();
-            if (empty($featuredExternalIds)) {
-                $latestExternal = \App\Models\ExternalHeadline::with(['categories', 'newsSource'])
-                    ->latest('published_at')
-                    ->take(1) // Cap to 1
-                    ->get();
-            }
+            // Allow external headlines to fill any remaining slots if internal articles are missing
+            $latestExternal = \App\Models\ExternalHeadline::with(['categories', 'newsSource'])
+                ->whereNotIn('id', $featuredExternalIds)
+                ->latest('published_at')
+                ->take($remainingSlots)
+                ->get();
 
             $latestItems = $latestArticles->concat($latestExternal)->sortByDesc('published_at')->take($remainingSlots)->values();
             $heroItems = $heroItems->concat($latestItems);
@@ -66,7 +64,7 @@ class HomeController extends Controller
         $secondaryExternal = \App\Models\ExternalHeadline::with(['categories', 'newsSource'])
             ->whereNotIn('id', $heroExternalIds)
             ->latest('published_at')
-            ->take(1) // Cap to 1 in Latest Updates
+            ->take(3) 
             ->get();
 
         $secondaryItems = $secondaryArticles->concat($secondaryExternal)->sortByDesc('published_at')->take(3)->values();
