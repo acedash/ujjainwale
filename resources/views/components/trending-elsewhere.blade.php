@@ -19,7 +19,7 @@
                     @endif
                     <div class="flex-grow">
                         <h3 class="font-sans font-bold text-lg text-ink leading-snug mb-1">
-                            <a href="{{ $headline->source_url }}" target="_blank" rel="noopener noreferrer" class="hover:text-city-accent transition-colors">
+                            <a href="{{ route('external.show', $headline->id) }}" class="hover:text-city-accent transition-colors">
                                 {{ $headline->title }}
                             </a>
                         </h3>
