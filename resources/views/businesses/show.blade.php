@@ -84,33 +84,33 @@
         <div class="px-6 pb-6 border-b border-gray-200">
             <div class="flex flex-wrap justify-center gap-3">
                 @if($business->website)
-                    <a href="{{ $business->website }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-blue-50 hover:border-blue-100 transition-colors cursor-pointer">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    <a href="{{ $business->website }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer">
+                        <svg class="w-5 h-5 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                         <span class="text-sm font-medium text-gray-700">Website</span>
                     </a>
                 @endif
                 
                 @if($business->lat && $business->lng)
-                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ $business->lat }},{{ $business->lng }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-blue-50 hover:border-blue-100 transition-colors cursor-pointer">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ $business->lat }},{{ $business->lng }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer">
+                        <svg class="w-5 h-5 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                         <span class="text-sm font-medium text-gray-700">Directions</span>
                     </a>
                 @endif
 
-                <button class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-blue-50 hover:border-blue-100 transition-colors cursor-pointer">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                <button class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer">
+                    <svg class="w-5 h-5 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
                     <span class="text-sm font-medium text-gray-700">Save</span>
                 </button>
                 
-                <button class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-blue-50 hover:border-blue-100 transition-colors cursor-pointer">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                <button class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer">
+                    <svg class="w-5 h-5 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                     <span class="text-sm font-medium text-gray-700">Share</span>
                 </button>
                 
                 @if($business->phone)
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $business->phone) }}" class="flex items-center justify-center gap-2 w-full mt-2 px-6 py-2.5 rounded-full border border-gray-300 hover:bg-blue-50 hover:border-blue-100 transition-colors cursor-pointer">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                        <span class="text-sm font-medium text-blue-700">Call</span>
+                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $business->phone) }}" class="flex items-center justify-center gap-2 w-full mt-2 px-6 py-2.5 rounded-full border border-gray-300 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer">
+                        <svg class="w-5 h-5 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        <span class="text-sm font-medium text-ink">Call</span>
                     </a>
                 @endif
             </div>
@@ -121,7 +121,7 @@
             <!-- Address Row with Map Thumbnail -->
             <div class="flex items-start py-4 border-b border-gray-100 last:border-0 relative min-h-[96px]">
                 <div class="w-12 flex-shrink-0 flex justify-center mt-1">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <svg class="w-6 h-6 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
                 <div class="flex-1 pr-24">
                     <p class="font-sans text-gray-800 text-sm leading-relaxed">{{ $business->address ?: 'Address not provided' }}</p>
@@ -138,10 +138,10 @@
             @if($business->phone)
                 <div class="flex items-center py-4 border-b border-gray-100 last:border-0 group cursor-pointer">
                     <div class="w-12 flex-shrink-0 flex justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        <svg class="w-6 h-6 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                     </div>
                     <div class="flex-1">
-                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $business->phone) }}" class="font-sans text-gray-800 text-sm group-hover:text-blue-600 transition-colors">{{ $business->phone }}</a>
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $business->phone) }}" class="font-sans text-gray-800 text-sm group-hover:text-city-accent transition-colors">{{ $business->phone }}</a>
                     </div>
                 </div>
             @endif
@@ -150,10 +150,10 @@
             @if($business->email)
                 <div class="flex items-center py-4 border-b border-gray-100 last:border-0 group cursor-pointer">
                     <div class="w-12 flex-shrink-0 flex justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <svg class="w-6 h-6 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     </div>
                     <div class="flex-1">
-                        <a href="mailto:{{ $business->email }}" class="font-sans text-gray-800 text-sm group-hover:text-blue-600 transition-colors">{{ $business->email }}</a>
+                        <a href="mailto:{{ $business->email }}" class="font-sans text-gray-800 text-sm group-hover:text-city-accent transition-colors">{{ $business->email }}</a>
                     </div>
                 </div>
             @endif
