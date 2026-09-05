@@ -6,7 +6,7 @@
     </div>
 
     <!-- Glassmorphic Header -->
-    <div class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-ink/5 pt-24 pb-6 px-6">
+    <div class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-ink/5 pt-8 pb-6 px-6">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div class="flex items-center gap-6">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-city-accent to-[#a33927] text-white flex items-center justify-center font-display font-black text-3xl shadow-lg shadow-city-accent/30">
@@ -29,11 +29,11 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="max-w-7xl mx-auto px-6 py-8">
         <div class="flex flex-col lg:flex-row gap-12 relative z-10">
             <!-- Sidebar -->
             <div class="w-full lg:w-64 flex-shrink-0">
-                <div class="sticky top-40 bg-white/40 backdrop-blur-3xl rounded-3xl border border-white/50 p-4 shadow-sm">
+                <div class="sticky top-32 bg-white/40 backdrop-blur-3xl rounded-3xl border border-white/50 p-4 shadow-sm">
                     <nav class="space-y-1">
                         <a href="{{ route('dashboard') }}" class="group flex items-center gap-3 px-4 py-3 font-sans text-sm font-bold rounded-2xl transition-all {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-city-accent/10 to-transparent text-city-accent border-l-4 border-city-accent' : 'text-gray-500 hover:bg-white/60 hover:text-ink hover:shadow-sm' }}">
                             <svg class="w-5 h-5 {{ request()->routeIs('dashboard') ? 'text-city-accent' : 'text-gray-400 group-hover:text-ink transition-colors' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
