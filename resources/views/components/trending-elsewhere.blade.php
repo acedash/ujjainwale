@@ -2,11 +2,16 @@
 
 @if($headlines->isNotEmpty())
     <section class="bg-paper rounded-xl p-8 border border-newsprint">
-        <div class="mb-6">
-            <h2 class="font-display font-bold text-2xl text-ink">
-                <span class="text-city-accent mr-2">|</span>Trending Elsewhere
-            </h2>
-            <p class="font-sans text-sm text-gray-500 mt-1">Headlines from other local news sources, updated automatically.</p>
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="font-display font-bold text-2xl text-ink">
+                    <span class="text-city-accent mr-2">|</span>Trending Elsewhere
+                </h2>
+                <p class="font-sans text-sm text-gray-500 mt-1">Headlines from other local news sources, updated automatically.</p>
+            </div>
+            <a href="{{ route('external.index') }}" class="font-sans font-semibold text-sm text-city-accent hover:text-ink transition-colors uppercase tracking-wide">
+                See All &rarr;
+            </a>
         </div>
 
         <div class="space-y-6">

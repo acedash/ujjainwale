@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/news/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/news/external/{headline}', [ExternalHeadlineController::class, 'show'])->name('external.show');
+Route::get('/trending', [ExternalHeadlineController::class, 'index'])->name('external.index');
 Route::get('/feed.xml', [FeedController::class, 'rss'])->name('feed');
 
 Route::get('/category/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
