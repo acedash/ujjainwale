@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-neighborhood-strip :neighborhoods="$neighborhoods" />
+    @livewire('news-ticker')
 
     <div class="max-w-7xl mx-auto px-8 md:px-12 pt-8 pb-12">
         <!-- Hero & Secondary Section -->

@@ -27,7 +27,6 @@
         </div>
 
         <div class="min-h-screen flex flex-col relative z-0">
-            @livewire('news-ticker')
             <x-masthead />
 
             <!-- Page Content -->
