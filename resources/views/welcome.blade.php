@@ -130,6 +130,9 @@
 </script>
 @endpushonce
 
+        <!-- Leaderboard Ad Placeholder -->
+        <x-ad-space size="leaderboard" class="mb-12" />
+
         <!-- Trending (External Aggregation) moved below hero -->
         <div class="mt-8 mb-16">
             <x-trending-elsewhere :headlines="$externalHeadlines" />

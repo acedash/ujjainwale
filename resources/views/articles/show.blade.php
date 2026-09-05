@@ -31,9 +31,12 @@
         @endif
 
         <div
-            class="prose prose-xl prose-ink max-w-2xl font-serif leading-relaxed mb-20 prose-img:rounded-xl prose-img:shadow-lg prose-headings:font-display prose-headings:font-bold prose-a:text-city-accent hover:prose-a:text-ink prose-p:first-of-type:first-letter:text-7xl prose-p:first-of-type:first-letter:font-display prose-p:first-of-type:first-letter:font-black prose-p:first-of-type:first-letter:float-left prose-p:first-of-type:first-letter:mr-3 prose-p:first-of-type:first-letter:-mt-2 prose-p:first-of-type:first-letter:text-ink [&_figcaption.attachment__caption]:hidden">
+            class="prose prose-xl prose-ink max-w-2xl font-serif leading-relaxed mb-10 prose-img:rounded-xl prose-img:shadow-lg prose-headings:font-display prose-headings:font-bold prose-a:text-city-accent hover:prose-a:text-ink prose-p:first-of-type:first-letter:text-7xl prose-p:first-of-type:first-letter:font-display prose-p:first-of-type:first-letter:font-black prose-p:first-of-type:first-letter:float-left prose-p:first-of-type:first-letter:mr-3 prose-p:first-of-type:first-letter:-mt-2 prose-p:first-of-type:first-letter:text-ink [&_figcaption.attachment__caption]:hidden">
             {!! $article->body !!}
         </div>
+
+        <!-- Rectangle Ad Placeholder inside article flow -->
+        <x-ad-space size="large-rectangle" class="mb-16 -ml-4 md:ml-0" />
 
         @if($article->mentionedBusinesses->count())
             <section class="border-t border-newsprint pt-10">
