@@ -79,16 +79,22 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="group">
-                                        <label for="lat" class="block font-sans font-bold text-sm text-ink mb-2 group-focus-within:text-city-accent transition-colors">Latitude <span class="text-city-accent">*</span></label>
-                                        <input type="text" wire:model="lat" id="lat" placeholder="e.g. 22.7196" class="w-full rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
+                                        <label for="latitude_input" class="block font-sans font-bold text-sm text-ink mb-2 group-focus-within:text-city-accent transition-colors">Latitude <span class="text-city-accent">*</span></label>
+                                        <input type="text" wire:model="lat" id="latitude_input" placeholder="e.g. 22.7196" class="w-full rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
                                         <p class="text-xs text-gray-500 mt-2 font-sans italic"><a href="https://support.google.com/maps/answer/18539" target="_blank" class="text-directory-blue hover:underline">How to find your coordinates?</a></p>
                                         @error('lat') <span class="text-red-500 text-xs font-sans mt-2 block font-medium">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="group">
-                                        <label for="lng" class="block font-sans font-bold text-sm text-ink mb-2 group-focus-within:text-city-accent transition-colors">Longitude <span class="text-city-accent">*</span></label>
-                                        <input type="text" wire:model="lng" id="lng" placeholder="e.g. 75.8577" class="w-full rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
+                                        <label for="longitude_input" class="block font-sans font-bold text-sm text-ink mb-2 group-focus-within:text-city-accent transition-colors">Longitude <span class="text-city-accent">*</span></label>
+                                        <input type="text" wire:model="lng" id="longitude_input" placeholder="e.g. 75.8577" class="w-full rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
                                         @error('lng') <span class="text-red-500 text-xs font-sans mt-2 block font-medium">{{ $message }}</span> @enderror
                                     </div>
+                                </div>
+                                <div class="pt-2">
+                                    <button type="button" @click="navigator.geolocation.getCurrentPosition(pos => { let latEl = document.getElementById('latitude_input'); let lngEl = document.getElementById('longitude_input'); latEl.value = pos.coords.latitude; lngEl.value = pos.coords.longitude; latEl.dispatchEvent(new Event('input')); lngEl.dispatchEvent(new Event('input')); }, err => alert('Could not get location. Please ensure location permissions are granted or enter manually.'));" class="text-sm font-sans font-bold text-city-accent hover:text-ink transition-colors flex items-center gap-1.5 bg-white py-2 px-4 rounded border border-gray-200 shadow-sm w-max">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        Get Current Location
+                                    </button>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,7 +121,7 @@
                             
                             <div class="md:col-span-2 space-y-8">
                                 <div class="group">
-                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Categories <span class="text-city-accent">*</span></label>
+                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Categories</label>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                         @foreach($this->availableCategories as $category)
                                             <label class="flex items-center p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:border-city-accent hover:bg-red-50 transition-colors has-[:checked]:border-city-accent has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-city-accent">
@@ -128,7 +134,7 @@
                                 </div>
 
                                 <div class="group">
-                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Neighborhoods <span class="text-city-accent">*</span></label>
+                                    <label class="block font-sans font-bold text-sm text-ink mb-3 group-focus-within:text-city-accent transition-colors">Neighborhoods</label>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                         @foreach($this->availableNeighborhoods as $neighborhood)
                                             <label class="flex items-center p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:border-city-accent hover:bg-red-50 transition-colors has-[:checked]:border-city-accent has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-city-accent">
