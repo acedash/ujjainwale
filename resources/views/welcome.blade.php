@@ -2,7 +2,7 @@
     <x-neighborhood-strip :neighborhoods="$neighborhoods" />
     @livewire('news-ticker')
 
-    <div class="max-w-7xl mx-auto px-8 md:px-12 pt-8 pb-12">
+    <div class="max-w-7xl mx-auto px-8 md:px-12 pt-4 pb-12">
         <!-- Hero & Secondary Section -->
         @if($heroItems->isNotEmpty() || $secondaryItems->isNotEmpty())
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">

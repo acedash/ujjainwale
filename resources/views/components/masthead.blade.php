@@ -1,4 +1,4 @@
-<div x-data="{ mobileMenuOpen: false }" class="px-4 md:px-8 mt-6 mb-6">
+<div x-data="{ mobileMenuOpen: false }" class="px-4 md:px-8 mt-6 mb-2">
     <header class="py-4 px-6 md:px-10 sticky top-6 bg-white/70 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] z-50 relative border border-white/50 rounded-2xl max-w-7xl mx-auto transition-all duration-300">
         <div class="flex items-center justify-between">
             <!-- Logo & Weather -->
