@@ -18,23 +18,21 @@
         
         <!-- Filters Header -->
         <div class="p-6 border-b border-gray-200 sticky top-0 z-20 bg-white/95 backdrop-blur-sm">
-            <div class="flex items-center justify-between mb-6">
-                <h1 class="font-display font-medium text-3xl text-ink tracking-tight">Explore Indore</h1>
-                <a href="{{ route('directory.register') }}" class="font-sans text-sm font-medium text-blue-600 bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 transition-colors shadow-sm border border-blue-100">
-                    Add Business
-                </a>
-            </div>
-            
-            <div class="flex flex-col gap-3">
-                <!-- Search -->
-                <div class="relative group">
-                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search places, categories..." class="w-full pl-11 pr-4 py-3 border-0 bg-gray-100 rounded-2xl font-sans text-sm focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all shadow-inner text-gray-800 placeholder-gray-500">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-display font-bold text-ink">Explore Indore</h1>
+                    <a href="{{ route('directory.register') }}" class="bg-city-accent hover:bg-city-accent/90 text-white shadow-sm px-4 py-2 rounded-full font-sans font-medium text-sm transition-colors">Add Business</a>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <!-- Search -->
+                <div class="relative mb-4">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search places, categories..." class="w-full pl-11 pr-4 py-3 border border-gray-200 bg-white rounded-xl font-sans text-sm focus:border-city-accent focus:ring-4 focus:ring-city-accent/10 transition-all text-ink placeholder-gray-400 shadow-sm">
+                </div>
+
+                <!-- Filters -->
+                <div class="flex gap-3">
                     <!-- Category Filter -->
-                    <select wire:model.live="category" class="w-full px-4 py-2.5 border-0 bg-gray-100 rounded-xl font-sans text-sm focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all text-gray-700 shadow-inner">
+                    <select wire:model.live="category" class="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl font-sans text-sm focus:border-city-accent focus:ring-4 focus:ring-city-accent/10 transition-all text-gray-700 shadow-sm">
                         <option value="">All Categories</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -42,7 +40,7 @@
                     </select>
 
                     <!-- Neighborhood Filter -->
-                    <select wire:model.live="neighborhood" class="w-full px-4 py-2.5 border-0 bg-gray-100 rounded-xl font-sans text-sm focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all text-gray-700 shadow-inner">
+                    <select wire:model.live="neighborhood" class="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl font-sans text-sm focus:border-city-accent focus:ring-4 focus:ring-city-accent/10 transition-all text-gray-700 shadow-sm">
                         <option value="">All Neighborhoods</option>
                         @foreach($neighborhoods as $hood)
                             <option value="{{ $hood->id }}">{{ $hood->name }}</option>
@@ -59,7 +57,7 @@
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
 
-            <div class="divide-y divide-gray-100">
+            <div class="flex flex-col gap-4 p-6 pt-2">
                 @forelse($businesses as $business)
                     <div class="relative group" 
                          x-data="{ shown: false }" 
@@ -68,7 +66,7 @@
                          class="transition-all duration-500 ease-out">
                          
                         <!-- Card Content -->
-                        <a id="business-card-{{ $business->id }}" href="{{ route('directory.show', $business->slug) }}" class="block bg-white p-5 hover:bg-gray-50 transition-colors">
+                        <a id="business-card-{{ $business->id }}" href="{{ route('directory.show', $business->slug) }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:border-city-accent/30 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all">
                             <div class="flex gap-4">
                                 <!-- Thumbnail (Left side) -->
                                 <div class="flex-shrink-0">
@@ -77,15 +75,15 @@
                                     @elseif($business->hasMedia('logo'))
                                         <img src="{{ $business->getFirstMediaUrl('logo') }}" class="w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-xl object-contain border border-gray-100 bg-white p-2 shadow-sm">
                                     @else
-                                        <div class="w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-xl bg-gray-100 flex items-center justify-center border border-gray-200 shadow-sm">
-                                            <span class="font-display font-medium text-gray-400 text-3xl">{{ substr($business->name, 0, 1) }}</span>
+                                        <div class="w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-xl bg-gray-50 flex items-center justify-center border border-gray-100 shadow-sm">
+                                            <span class="font-display font-medium text-gray-300 text-3xl">{{ substr($business->name, 0, 1) }}</span>
                                         </div>
                                     @endif
                                 </div>
 
                                 <div class="flex-grow flex flex-col justify-between overflow-hidden">
                                     <div>
-                                        <h3 class="font-display font-medium text-lg text-ink truncate mb-1 group-hover:text-blue-700 transition-colors">{{ $business->name }}</h3>
+                                        <h3 class="font-display font-medium text-lg text-ink truncate mb-1 group-hover:text-city-accent transition-colors">{{ $business->name }}</h3>
                                         
                                         <!-- Rating & Category -->
                                         <div class="flex items-center gap-1.5 text-sm mb-1.5">
@@ -110,8 +108,8 @@
                                     <div class="text-xs font-sans mt-3 flex items-center gap-2">
                                         <span class="text-green-700 font-medium bg-green-50 px-2 py-0.5 rounded border border-green-100">Open</span>
                                         @if($business->status === 'claimed')
-                                            <span class="text-blue-700 font-medium bg-blue-50 px-2 py-0.5 rounded border border-blue-100 flex items-center gap-1">
-                                                <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span class="text-city-accent font-medium bg-red-50 px-2 py-0.5 rounded border border-red-100 flex items-center gap-1">
+                                                <svg class="w-3 h-3 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 Verified
                                             </span>
                                         @endif
@@ -121,13 +119,13 @@
                         </a>
                     </div>
                 @empty
-                    <div class="text-center py-16 px-6">
-                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100">
+                    <div class="text-center py-16 px-6 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100 shadow-sm">
                             <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
                         <h3 class="text-xl font-medium text-ink font-display mb-2">No businesses found</h3>
                         <p class="text-sm text-gray-500 font-sans max-w-sm mx-auto leading-relaxed">We couldn't find any businesses matching your criteria. Try adjusting your filters or search term.</p>
-                        <button wire:click="$set('search', '')" class="mt-6 text-blue-600 hover:text-blue-700 hover:underline font-sans text-sm font-medium transition-colors">Clear all filters</button>
+                        <button wire:click="$set('search', '')" class="mt-6 text-city-accent hover:opacity-80 font-sans text-sm font-bold transition-colors uppercase tracking-wider">Clear all filters</button>
                     </div>
                 @endforelse
             </div>
