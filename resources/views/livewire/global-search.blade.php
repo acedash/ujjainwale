@@ -17,7 +17,7 @@
             <!-- Search Input -->
             <div class="relative flex items-center p-2 border-b border-gray-100 bg-gray-50/50">
                 <svg class="w-6 h-6 text-city-accent absolute left-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <input wire:model.live.debounce.300ms="search" x-ref="searchInput" type="text" placeholder="Search news, businesses, and more..." class="w-full pl-14 pr-14 py-5 text-xl font-display font-medium text-ink bg-transparent border-none focus:ring-0 placeholder-gray-400">
+                <input wire:model.live.debounce.300ms="search" x-ref="searchInput" type="text" placeholder="Search news, businesses, and more..." class="w-full !pl-16 !pr-16 py-5 text-xl font-display font-medium text-ink bg-transparent border-none focus:ring-0 placeholder-gray-400">
                 
                 <div wire:loading class="absolute right-16">
                     <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-city-accent"></div>
