@@ -44,34 +44,35 @@ class FetchExternalHeadlines extends Command
                         $guid = hash('sha256', $guid);
                     }
 
-                    if (\App\Models\ExternalHeadline::where('guid', $guid)->exists()) {
-                        continue;
+                    $headline = \App\Models\ExternalHeadline::where('guid', $guid)->first();
+
+                    if (!$headline) {
+                        $title = $item->get_title();
+                        if (empty($title)) continue; // skip items without titles
+
+                        $snippet = strip_tags($item->get_description() ?? '');
+
+                        $thumbnail = null;
+                        if ($enclosure = $item->get_enclosure()) {
+                            $thumbnail = $enclosure->get_link();
+                        }
+
+                        $headline = \App\Models\ExternalHeadline::create([
+                            'news_source_id' => $source->id,
+                            'title' => $title,
+                            'original_snippet' => $snippet,
+                            'ai_summary' => null,
+                            'source_url' => $item->get_permalink(),
+                            'thumbnail_url' => $thumbnail,
+                            'guid' => $guid,
+                            'published_at' => $item->get_date('Y-m-d H:i:s'),
+                            'fetched_at' => now(),
+                        ]);
+                        $newCount++;
                     }
-
-                    $title = $item->get_title();
-                    if (empty($title)) continue; // skip items without titles
-
-                    $snippet = strip_tags($item->get_description() ?? '');
-
-                    $thumbnail = null;
-                    if ($enclosure = $item->get_enclosure()) {
-                        $thumbnail = $enclosure->get_link();
-                    }
-
-                    $headline = \App\Models\ExternalHeadline::create([
-                        'news_source_id' => $source->id,
-                        'title' => $title,
-                        'original_snippet' => $snippet,
-                        'ai_summary' => null,
-                        'source_url' => $item->get_permalink(),
-                        'thumbnail_url' => $thumbnail,
-                        'guid' => $guid,
-                        'published_at' => $item->get_date('Y-m-d H:i:s'),
-                        'fetched_at' => now(),
-                    ]);
 
                     if ($source->default_category_id) {
-                        $headline->categories()->attach($source->default_category_id);
+                        $headline->categories()->syncWithoutDetaching([$source->default_category_id]);
                     }
 
                     if ($categories = $item->get_categories()) {
@@ -89,8 +90,6 @@ class FetchExternalHeadlines extends Command
                             }
                         }
                     }
-
-                    $newCount++;
                 }
             } catch (\Exception $e) {
                 $this->error("Error fetching {$source->name}: " . $e->getMessage());
