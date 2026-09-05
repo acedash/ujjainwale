@@ -31,12 +31,12 @@
         </header>
 
         <!-- Content Section -->
-        <div class="relative z-20 max-w-3xl mx-auto px-6 py-12 -mt-16 md:-mt-24 bg-white rounded-t-[3rem] md:rounded-t-[4rem] shadow-2xl">
-            <div class="prose prose-lg prose-ink max-w-none font-serif leading-loose text-gray-800 pt-8">
+        <div class="relative z-20 max-w-4xl mx-auto px-6 py-16 -mt-16 md:-mt-24 bg-white rounded-t-[3rem] md:rounded-[3rem] md:mb-24 shadow-2xl flex flex-col border border-gray-100">
+            <div class="max-w-2xl mx-auto w-full">
                 
                 @if($headline->ai_summary)
-                    <div class="mb-14 p-8 rounded-3xl bg-gray-50 border border-gray-100 relative">
-                        <div class="absolute -top-3 left-8 bg-white px-3 py-1 rounded-full border border-gray-100 shadow-sm flex items-center gap-1.5 text-city-accent">
+                    <div class="mb-14 p-8 rounded-3xl bg-blue-50 border border-blue-100 relative">
+                        <div class="absolute -top-3 left-8 bg-white px-3 py-1 rounded-full border border-blue-100 shadow-sm flex items-center gap-1.5 text-blue-600">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             <span class="font-sans font-bold text-[10px] uppercase tracking-widest">AI Summary</span>
                         </div>
@@ -44,15 +44,19 @@
                     </div>
                 @endif
                 
-                <div class="text-xl font-light text-gray-600 leading-relaxed mb-16 px-4 md:px-8">
-                    {!! nl2br(e($headline->original_snippet)) !!}
+                <div class="relative my-8">
+                    <svg class="absolute -top-8 -left-6 md:-left-12 w-16 h-16 text-gray-100 transform -scale-x-100" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/></svg>
+                    
+                    <div class="text-2xl md:text-3xl font-serif text-gray-700 leading-relaxed md:leading-[1.8] text-center relative z-10 px-4 font-medium">
+                        {!! nl2br(e($headline->original_snippet)) !!}
+                    </div>
                 </div>
                 
-                <div class="flex flex-col items-center justify-center pt-12 pb-8 border-t border-gray-100">
-                    <span class="font-sans text-xs text-gray-400 mb-4 uppercase tracking-widest">Continue Reading</span>
-                    <a href="{{ $headline->source_url }}" target="_blank" rel="noopener noreferrer" class="font-sans text-sm font-bold text-city-accent hover:text-ink transition-colors flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 py-2.5 px-6 rounded-full border border-gray-200">
+                <div class="flex flex-col items-center justify-center pt-16 mt-16 border-t border-gray-100">
+                    <span class="font-sans text-sm font-semibold text-gray-400 mb-6 uppercase tracking-[0.2em]">Read Full Story</span>
+                    <a href="{{ $headline->source_url }}" target="_blank" rel="noopener noreferrer" class="font-sans text-base font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-3 py-4 px-10 rounded-full">
                         Visit {{ $headline->newsSource->name }}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
                 </div>
             </div>
