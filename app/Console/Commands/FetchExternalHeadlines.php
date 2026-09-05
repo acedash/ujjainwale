@@ -74,6 +74,22 @@ class FetchExternalHeadlines extends Command
                         $headline->categories()->attach($source->default_category_id);
                     }
 
+                    if ($categories = $item->get_categories()) {
+                        foreach ($categories as $rssCategory) {
+                            $term = trim($rssCategory->get_label() ?? $rssCategory->get_term());
+                            if (!empty($term)) {
+                                $category = \App\Models\Category::firstOrCreate(
+                                    ['slug' => \Illuminate\Support\Str::slug($term)],
+                                    [
+                                        'name' => $term,
+                                        'type' => 'news'
+                                    ]
+                                );
+                                $headline->categories()->syncWithoutDetaching([$category->id]);
+                            }
+                        }
+                    }
+
                     $newCount++;
                 }
             } catch (\Exception $e) {
