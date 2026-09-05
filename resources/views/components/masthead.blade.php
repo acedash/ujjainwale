@@ -53,7 +53,11 @@
                 </a>
                 
                 @auth
-                    <a href="{{ route('dashboard') }}" class="text-ink hover:text-city-accent transition-colors">Profile</a>
+                    @if(auth()->user()->hasRole(['Admin', 'Editor', 'Author']))
+                        <a href="{{ url('/portal') }}" class="text-ink hover:text-city-accent transition-colors">Staff Panel</a>
+                    @else
+                        <a href="{{ route('dashboard') }}" class="text-ink hover:text-city-accent transition-colors">Profile</a>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" class="text-ink hover:text-city-accent transition-colors">Log In</a>
                 @endauth
@@ -94,7 +98,11 @@
                 <a href="#" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Map</a>
                 
                 @auth
-                    <a href="{{ route('dashboard') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">My Profile</a>
+                    @if(auth()->user()->hasRole(['Admin', 'Editor', 'Author']))
+                        <a href="{{ url('/portal') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Staff Panel</a>
+                    @else
+                        <a href="{{ route('dashboard') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">My Profile</a>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Log In</a>
                 @endauth

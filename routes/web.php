@@ -35,7 +35,7 @@ Route::redirect('/admin', '/portal');
 
 use App\Http\Controllers\DashboardController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', \App\Http\Middleware\RedirectStaffToPortal::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/reviews', [DashboardController::class, 'reviews'])->name('dashboard.reviews');
     Route::get('/dashboard/businesses', [DashboardController::class, 'businesses'])->name('dashboard.businesses');
