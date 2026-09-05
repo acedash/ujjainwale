@@ -13,10 +13,16 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'), // Or your preferred default password
+                'email_verified_at' => now(),
+            ]
+        );
+
+        $this->call(RolesAndPermissionsSeeder::class);
 
         $categories = Category::factory(5)->create();
         $neighborhoods = Neighborhood::factory(5)->create();
