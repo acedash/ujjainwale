@@ -6,7 +6,7 @@
                     <x-filament::card>
                         <div class="flex items-center space-x-4">
                             @if(isset($account->meta['avatar']))
-                                <img src="{{ $account->meta['avatar'] }}" alt="Avatar" class="w-12 h-12 rounded-full">
+                                <img src="{{ $account->meta['avatar'] }}" alt="Avatar" style="width: 3rem; height: 3rem; object-fit: cover; border-radius: 9999px;" class="rounded-full">
                             @endif
                             <div>
                                 <h3 class="text-lg font-medium">{{ ucfirst($account->provider) }}</h3>
