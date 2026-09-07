@@ -2,14 +2,14 @@
 
 @if($headlines->isNotEmpty())
     <section id="trending" class="mb-16 mt-8">
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex items-end justify-between mb-8 border-b border-gray-200 pb-4">
             <div>
-                <h2 class="font-display font-bold text-3xl text-ink">
-                    <span class="text-city-accent mr-2">|</span>Trending
+                <h2 class="font-sans font-bold text-2xl text-ink uppercase tracking-widest">
+                    Trending
                 </h2>
-                <p class="font-sans text-gray-500 mt-1">Headlines from other local news sources, updated automatically.</p>
+                <p class="font-sans text-gray-500 mt-2 text-sm font-light">Headlines from other local news sources, updated automatically.</p>
             </div>
-            <a href="{{ route('external.index') }}" class="font-sans font-semibold text-sm text-city-accent hover:text-ink transition-colors uppercase tracking-wide">
+            <a href="{{ route('external.index') }}" class="font-sans font-bold text-sm text-gray-500 hover:text-ink transition-colors uppercase tracking-widest">
                 See All &rarr;
             </a>
         </div>
@@ -22,8 +22,8 @@
                             <img src="{{ $headline->thumbnail_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         </div>
                     @endif
-                    <h3 class="font-display font-bold text-xl text-ink leading-snug mb-3">
-                        <a href="{{ route('external.show', $headline->id) }}" class="hover:text-city-accent transition-colors">
+                    <h3 class="font-sans font-bold text-lg lg:text-xl text-ink leading-tight mb-3">
+                        <a href="{{ route('external.show', $headline->id) }}" class="hover:text-gray-500 transition-colors">
                             {{ $headline->title }}
                         </a>
                     </h3>

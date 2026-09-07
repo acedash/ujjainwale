@@ -1,20 +1,21 @@
-<div x-data="{ mobileMenuOpen: false }" class="px-4 md:px-8 mt-6 mb-2">
-    <header class="py-4 px-6 md:px-10 sticky top-6 bg-white/70 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] z-50 relative border border-white/50 rounded-2xl max-w-7xl mx-auto transition-all duration-300">
-        <div class="flex items-center justify-between">
+<div x-data="{ mobileMenuOpen: false }">
+    <header class="py-4 px-6 md:px-10 sticky top-0 bg-white border-b border-gray-200 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
             <!-- Left Side: Logo, Weather, and Nav -->
             <div class="flex items-center gap-8 lg:gap-12">
                 <!-- Logo & Weather -->
                 <div class="flex items-center gap-6">
                     <a href="/" class="relative z-50 hover:opacity-80 transition-opacity">
-                        <img src="{{ asset('images/logo.png') }}" alt="Indore Logo" class="h-10 w-auto">
+                        <!-- We might need the original or a dark version of the logo, but let's assume it has good contrast -->
+                        <img src="{{ asset('images/ujjain-wale.jpeg') }}" alt="Ujjain Logo" class="h-10 w-auto">
                     </a>
                     
                     <!-- Weather / Date (Desktop only) -->
-                    <div class="hidden lg:flex flex-col border-l border-gray-200 pl-6 py-1 relative z-50">
-                        <span class="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-widest">{{ now()->format('l, M j') }}</span>
-                        <span class="text-xs font-sans font-medium text-ink flex items-center gap-1 mt-0.5">
+                    <div class="hidden lg:flex flex-col border-l border-gray-300 pl-6 py-1 relative z-50">
+                        <span class="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-widest">{{ now()->format('l, M j') }}</span>
+                        <span class="text-xs font-sans font-bold text-ink flex items-center gap-1 mt-0.5">
                             <svg class="w-3.5 h-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
-                            32°C Indore
+                            32°C Ujjain
                         </span>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
 
                     <a href="{{ route('home') }}#trending" class="text-ink hover:text-city-accent transition-colors">Trending</a>
                     
-                    <a href="{{ route('directory') }}" class="text-directory-blue hover:opacity-80 transition-opacity">Directory</a>
+                    <a href="{{ route('directory') }}" class="text-city-accent hover:opacity-80 transition-opacity">Directory</a>
                     
                     @auth
                         @if(auth()->user()->hasRole(['Admin', 'Editor', 'Author']))
@@ -64,8 +65,8 @@
 
             <!-- Right Side: Search / List Business / Mobile Menu -->
             <div class="flex items-center space-x-4 relative z-50">
-                <!-- CTA Button (Moved to Right Side) -->
-                <a href="{{ route('directory') }}" class="hidden md:block bg-city-accent text-white px-4 py-2.5 rounded-full hover:bg-city-accent/90 transition-colors shadow-sm whitespace-nowrap font-sans font-bold text-xs uppercase tracking-widest">
+                <!-- CTA Button -->
+                <a href="{{ route('directory') }}" class="hidden md:block bg-city-accent text-midnight px-4 py-2.5 rounded-full hover:bg-city-accent/90 transition-colors shadow-sm whitespace-nowrap font-sans font-bold text-xs uppercase tracking-widest">
                     List Business
                 </a>
                 

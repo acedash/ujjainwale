@@ -15,12 +15,13 @@ export default {
                 ink: '#0F0F0F',
                 paper: '#FDFBF7',
                 newsprint: '#F2F0EB',
-                'city-accent': 'var(--color-city-accent, #B83B22)',
+                'city-accent': 'var(--color-city-accent, #FFE576)',
+                'dark-accent': '#200000',
                 'directory-blue': '#1F3A4B',
                 success: '#2D5F3A',
                 // New premium colors
-                'gold': '#C5A059',
-                'burgundy': '#6C2127',
+                'gold': '#FFE576',
+                'burgundy': '#402020',
                 'sage': '#8BA888',
                 'midnight': '#111827',
                 'sand': '#E8E2D2'

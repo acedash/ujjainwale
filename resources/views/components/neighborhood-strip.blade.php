@@ -2,7 +2,7 @@
 
 <div class="w-full border-b border-gray-200 bg-gray-50 overflow-x-auto whitespace-nowrap scrollbar-hide">
     <div class="max-w-7xl mx-auto px-8 md:px-12 py-3 flex space-x-3 items-center">
-        <a href="{{ route('directory') }}" class="inline-flex items-center bg-gray-200 hover:bg-gray-300 text-ink px-4 py-1.5 rounded-full text-[10px] font-sans font-bold uppercase tracking-wider transition-colors">
+        <a href="{{ route('directory') }}" class="inline-flex items-center bg-ink hover:bg-ink/80 text-white px-4 py-1.5 rounded-full text-[10px] font-sans font-bold uppercase tracking-wider transition-colors">
             All Neighborhoods
         </a>
         @foreach($neighborhoods as $neighborhood)

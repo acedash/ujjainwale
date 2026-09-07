@@ -19,20 +19,20 @@
         <!-- Filters Header -->
         <div class="p-6 border-b border-gray-200 sticky top-0 z-20 bg-white/95 backdrop-blur-sm">
                 <div class="flex items-center justify-between mb-6">
-                    <h1 class="text-2xl font-display font-bold text-ink">Explore Indore</h1>
-                    <a href="{{ route('directory.register') }}" class="bg-city-accent hover:bg-city-accent/90 text-white shadow-sm px-4 py-2 rounded-full font-sans font-medium text-sm transition-colors">Add Business</a>
+                    <h1 class="text-2xl font-sans font-bold text-ink tracking-widest uppercase">Explore Ujjain</h1>
+                    <a href="{{ route('directory.register') }}" class="bg-ink hover:bg-gray-800 text-white shadow-sm px-4 py-2 rounded-lg font-sans font-medium text-sm transition-colors">Add Business</a>
                 </div>
 
                 <!-- Search -->
                 <div class="relative mb-4">
                     <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search places, categories..." class="w-full pl-11 pr-4 py-3 border border-gray-200 bg-white rounded-xl font-sans text-sm focus:border-city-accent focus:ring-4 focus:ring-city-accent/10 transition-all text-ink placeholder-gray-400 shadow-sm">
+                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search places, categories..." class="w-full pl-11 pr-4 py-3 border border-gray-200 bg-gray-50 rounded-lg font-sans text-sm focus:bg-white focus:border-gray-300 focus:ring-0 transition-all text-ink placeholder-gray-500">
                 </div>
 
                 <!-- Filters -->
                 <div class="flex gap-3">
                     <!-- Category Filter -->
-                    <select wire:model.live="category" class="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl font-sans text-sm focus:border-city-accent focus:ring-4 focus:ring-city-accent/10 transition-all text-gray-700 shadow-sm">
+                    <select wire:model.live="category" class="w-full px-4 py-3 border border-gray-200 bg-gray-50 rounded-lg font-sans text-sm focus:bg-white focus:border-gray-300 focus:ring-0 transition-all text-gray-700">
                         <option value="">All Categories</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -40,7 +40,7 @@
                     </select>
 
                     <!-- Neighborhood Filter -->
-                    <select wire:model.live="neighborhood" class="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl font-sans text-sm focus:border-city-accent focus:ring-4 focus:ring-city-accent/10 transition-all text-gray-700 shadow-sm">
+                    <select wire:model.live="neighborhood" class="w-full px-4 py-3 border border-gray-200 bg-gray-50 rounded-lg font-sans text-sm focus:bg-white focus:border-gray-300 focus:ring-0 transition-all text-gray-700">
                         <option value="">All Neighborhoods</option>
                         @foreach($neighborhoods as $hood)
                             <option value="{{ $hood->id }}">{{ $hood->name }}</option>
@@ -65,7 +65,7 @@
                          class="transition-all duration-500 ease-out">
                          
                         <!-- Card Content -->
-                        <a id="business-card-{{ $business->id }}" href="{{ route('directory.show', $business->slug) }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:border-city-accent/30 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all">
+                        <a id="business-card-{{ $business->id }}" href="{{ route('directory.show', $business->slug) }}" class="block bg-white p-5 border-b border-gray-100 hover:bg-gray-50 transition-colors">
                             <div class="flex gap-4">
                                 <!-- Thumbnail (Left side) -->
                                 <div class="flex-shrink-0">
@@ -82,7 +82,7 @@
 
                                 <div class="flex-grow flex flex-col justify-between overflow-hidden">
                                     <div>
-                                        <h3 class="font-display font-medium text-lg text-ink truncate mb-1 group-hover:text-city-accent transition-colors">{{ $business->name }}</h3>
+                                        <h3 class="font-sans font-bold text-xl text-ink truncate mb-1 group-hover:text-gray-500 transition-colors">{{ $business->name }}</h3>
                                         
                                         <!-- Rating & Category -->
                                         <div class="flex items-center gap-1.5 text-sm mb-1.5">
@@ -104,11 +104,12 @@
                                     </div>
                                     
                                     <!-- Status -->
-                                    <div class="text-xs font-sans mt-3 flex items-center gap-2">
-                                        <span class="text-green-700 font-medium bg-green-50 px-2 py-0.5 rounded border border-green-100">Open</span>
+                                    <div class="text-[10px] font-sans mt-3 flex items-center gap-2 uppercase tracking-widest font-bold">
+                                        <span class="text-green-700">Open</span>
                                         @if($business->status === 'claimed')
-                                            <span class="text-city-accent font-medium bg-red-50 px-2 py-0.5 rounded border border-red-100 flex items-center gap-1">
-                                                <svg class="w-3 h-3 text-city-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span class="text-gray-400">&bull;</span>
+                                            <span class="text-gray-600 flex items-center gap-1">
+                                                <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 Verified
                                             </span>
                                         @endif
@@ -118,13 +119,13 @@
                         </a>
                     </div>
                 @empty
-                    <div class="text-center py-16 px-6 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
-                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100 shadow-sm">
+                    <div class="text-center py-16 px-6">
+                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100">
                             <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
-                        <h3 class="text-xl font-medium text-ink font-display mb-2">No businesses found</h3>
-                        <p class="text-sm text-gray-500 font-sans max-w-sm mx-auto leading-relaxed">We couldn't find any businesses matching your criteria. Try adjusting your filters or search term.</p>
-                        <button wire:click="$set('search', '')" class="mt-6 text-city-accent hover:opacity-80 font-sans text-sm font-bold transition-colors uppercase tracking-wider">Clear all filters</button>
+                        <h3 class="text-xl font-bold text-ink font-sans mb-2 tracking-wide">No businesses found</h3>
+                        <p class="text-sm text-gray-500 font-sans max-w-sm mx-auto leading-relaxed">We couldn't find any businesses matching your criteria.</p>
+                        <button wire:click="$set('search', '')" class="mt-6 text-ink hover:text-gray-500 font-sans text-xs font-bold transition-colors uppercase tracking-widest border-b border-ink pb-1">Clear all filters</button>
                     </div>
                 @endforelse
             </div>
