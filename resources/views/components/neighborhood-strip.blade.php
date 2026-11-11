@@ -6,7 +6,7 @@
             All Neighborhoods
         </a>
         @foreach($neighborhoods as $neighborhood)
-            <a href="{{ route('neighborhoods.show', $neighborhood) }}" class="flex-shrink-0 inline-flex items-center bg-white border border-gray-200 hover:border-city-accent/50 text-gray-600 hover:text-city-accent px-4 py-1.5 rounded-full text-xs font-sans font-medium transition-colors snap-start">
+            <a href="{{ route('neighborhoods.show', $neighborhood) }}" class="flex-shrink-0 inline-flex items-center bg-white border border-gray-200 hover:border-amber-300 hover:bg-amber-50/60 text-gray-700 hover:text-amber-900 px-4 py-1.5 rounded-full text-xs font-sans font-medium transition-colors snap-start">
                 {{ $neighborhood->name }}
             </a>
         @endforeach

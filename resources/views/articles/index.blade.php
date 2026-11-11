@@ -2,7 +2,7 @@
     <!-- Header -->
     <div class="bg-paper border-b border-newsprint py-12 md:py-16 px-6">
         <div class="max-w-7xl mx-auto text-center">
-            <span class="text-city-accent font-sans font-bold text-xs tracking-widest uppercase mb-3 block">Ujjain Journal &amp; Stories</span>
+            <span class="text-amber-800 font-sans font-bold text-xs tracking-widest uppercase mb-3 inline-flex items-center gap-1.5 bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">Ujjain Journal &amp; Stories</span>
             <h1 class="font-display font-black text-4xl md:text-6xl text-ink tracking-tight mb-4">Blog</h1>
             <p class="font-sans text-gray-500 max-w-xl mx-auto text-base md:text-lg">
                 Explore local stories, cultural reflections, in-depth reports, and the pulse of Ujjain.

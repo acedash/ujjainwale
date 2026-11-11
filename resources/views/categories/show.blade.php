@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="bg-paper border-b border-newsprint py-12 px-6">
         <div class="max-w-7xl mx-auto text-center">
-            <span class="text-city-accent font-sans font-bold text-sm tracking-wider uppercase mb-2 block">Category</span>
+            <span class="text-amber-800 font-sans font-bold text-xs tracking-wider uppercase mb-2 inline-flex items-center gap-1.5 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Category</span>
             <h1 class="font-display font-black text-5xl md:text-6xl text-ink">{{ $category->name }}</h1>
         </div>
     </div>

@@ -3,7 +3,7 @@
         <header class="mb-10 max-w-3xl">
             @if($article->categories->count())
                 <span
-                    class="text-city-accent font-sans font-bold text-sm tracking-widest uppercase mb-4 block">{{ $article->categories->first()->name }}</span>
+                    class="text-amber-800 font-sans font-bold text-xs tracking-widest uppercase mb-4 inline-flex items-center gap-1.5 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">{{ $article->categories->first()->name }}</span>
             @endif
 
             <h1 class="font-display font-black text-5xl md:text-7xl text-ink leading-[1.1] mb-6">
