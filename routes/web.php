@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExternalHeadlineController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NeighborhoodController;
@@ -11,10 +12,10 @@ use App\Http\Controllers\SocialiteController;
 use App\Livewire\AcceptInvite;
 use App\Livewire\BusinessDirectory;
 use App\Livewire\RegisterBusiness;
-use App\Http\Controllers\ExternalHeadlineController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/blog', [ArticleController::class, 'index'])->name('blog');
 Route::get('/news/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/news/external/{headline}', [ExternalHeadlineController::class, 'show'])->name('external.show');
 Route::get('/trending', [ExternalHeadlineController::class, 'index'])->name('external.index');
@@ -34,8 +35,9 @@ Route::get('/accept-invite/{user}', AcceptInvite::class)->name('accept-invite');
 Route::redirect('/admin', '/portal');
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Middleware\RedirectStaffToPortal;
 
-Route::middleware(['auth', 'verified', \App\Http\Middleware\RedirectStaffToPortal::class])->group(function () {
+Route::middleware(['auth', 'verified', RedirectStaffToPortal::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/reviews', [DashboardController::class, 'reviews'])->name('dashboard.reviews');
     Route::get('/dashboard/businesses', [DashboardController::class, 'businesses'])->name('dashboard.businesses');

@@ -22,7 +22,8 @@
 
                 <!-- Desktop Nav -->
                 <nav class="hidden md:flex items-center space-x-5 lg:space-x-8 font-sans font-bold text-xs uppercase tracking-widest relative z-50">
-                    <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors">Home</a>
+                    <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors {{ request()->routeIs('home') ? 'text-city-accent' : '' }}">Home</a>
+                    <a href="{{ route('blog') }}" class="text-ink hover:text-city-accent transition-colors {{ request()->routeIs('blog') ? 'text-city-accent' : '' }}">Blog</a>
                     
                     <!-- Categories Dropdown -->
                     <div x-data="{ open: false }" @mouseleave="open = false" class="relative">
@@ -70,7 +71,7 @@
                     List Business
                 </a>
                 
-                <button @click="$dispatch('open-search')" class="text-ink hover:text-city-accent">
+                <button type="button" @click="$dispatch('open-search')" aria-label="Search" class="text-ink hover:text-city-accent">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-ink">
@@ -93,6 +94,11 @@
              class="absolute top-full left-0 w-full bg-paper border-b border-newsprint shadow-xl z-40 md:hidden">
             <nav class="flex flex-col font-sans font-medium p-6 space-y-4">
                 <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Home</a>
+                <a href="{{ route('blog') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Blog</a>
+                <button type="button" @click="mobileMenuOpen = false; $dispatch('open-search')" class="text-left text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2 flex items-center justify-between">
+                    <span>Search</span>
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
                 <a href="{{ route('home') }}" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">News</a>
                 <a href="{{ route('home') }}#trending" class="text-ink hover:text-city-accent transition-colors text-lg border-b border-newsprint pb-2">Trending</a>
                 <a href="{{ route('directory') }}" class="text-directory-blue hover:opacity-80 transition-opacity text-lg border-b border-newsprint pb-2">Local Businesses</a>
