@@ -23,9 +23,13 @@
             </div>
         </header>
 
-        @if($article->getFirstMediaUrl('featured_image'))
+        @php
+            $articleFeaturedImage = $article->getFirstMediaUrl('featured_image') ?: $article->getFirstMediaUrl('cover');
+        @endphp
+
+        @if($articleFeaturedImage)
             <div class="aspect-video max-w-4xl bg-newsprint rounded-xl overflow-hidden mb-16 shadow-lg relative">
-                <img src="{{ $article->getFirstMediaUrl('featured_image') }}" alt="{{ $article->title }}"
+                <img src="{{ $articleFeaturedImage }}" alt="{{ $article->title }}"
                     class="w-full h-full object-cover">
             </div>
         @endif

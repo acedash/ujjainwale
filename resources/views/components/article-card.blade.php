@@ -4,7 +4,7 @@
     $url = $isExternal ? route('external.show', $article) : route('articles.show', $article);
     $target = '';
 
-    $imageUrl = $isExternal ? $article->thumbnail_url : $article->getFirstMediaUrl('featured_image');
+    $imageUrl = $isExternal ? $article->thumbnail_url : ($article->getFirstMediaUrl('featured_image') ?: $article->getFirstMediaUrl('cover'));
 
     $categoryName = $article->categories->first()?->name;
     $date = $isExternal

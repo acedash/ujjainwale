@@ -32,25 +32,27 @@ class ImportWordPressPosts extends Command
     {
         $filePath = $this->argument('file') ?? base_path('posts-wp.csv');
 
-        if (!File::exists($filePath)) {
+        if (! File::exists($filePath)) {
             $this->error("File not found at: {$filePath}");
+
             return 1;
         }
 
         $defaultUser = User::first();
-        if (!$defaultUser) {
-            $this->error("No users found in the database. Please create a user first to assign as the author.");
+        if (! $defaultUser) {
+            $this->error('No users found in the database. Please create a user first to assign as the author.');
+
             return 1;
         }
 
         $file = fopen($filePath, 'r');
         $header = fgetcsv($file);
-        
+
         // Ensure UTF-8 BOM is removed from the first header
         $header[0] = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $header[0]);
 
         $count = 0;
-        $this->info("Starting import...");
+        $this->info('Starting import...');
 
         while ($row = fgetcsv($file)) {
             $data = array_combine($header, $row);
@@ -82,17 +84,17 @@ class ImportWordPressPosts extends Command
             $article->title = $title;
             $article->body = $data['Content'] ?? '';
             $article->dek = $data['Excerpt'] ?? null;
-            $article->published_at = !empty($data['Date']) ? $data['Date'] : null;
+            $article->published_at = ! empty($data['Date']) ? $data['Date'] : null;
             $article->status = $status;
-            
+
             // Prevent duplicate facebook posting during import
             $article->post_to_facebook = false;
             $article->posted_to_facebook = true;
-            
+
             $article->save();
 
             // Handle Categories
-            if (!empty($data['Categories'])) {
+            if (! empty($data['Categories'])) {
                 $categoryNames = array_filter(explode('|', $data['Categories']));
                 $categoryIds = [];
                 foreach ($categoryNames as $catName) {
@@ -106,25 +108,25 @@ class ImportWordPressPosts extends Command
             }
 
             // Handle Tags
-            if (!empty($data['Tags'])) {
+            if (! empty($data['Tags'])) {
                 $tags = array_filter(array_map('trim', explode('|', $data['Tags'])));
-                if (!empty($tags)) {
+                if (! empty($tags)) {
                     $article->attachTags($tags);
                 }
             }
 
             // Handle Media
-            if (!empty($data['Image URL']) && $article->getMedia('cover')->count() === 0) {
+            if (! empty($data['Image URL']) && $article->getMedia('featured_image')->count() === 0 && $article->getMedia('cover')->count() === 0) {
                 // Image URL can contain multiple pipe-separated URLs
                 $imageUrls = explode('|', $data['Image URL']);
                 $firstUrl = trim($imageUrls[0]);
-                
-                if (!empty($firstUrl)) {
+
+                if (! empty($firstUrl)) {
                     try {
                         $this->line("Downloading image for: {$title}");
-                        $article->addMediaFromUrl($firstUrl)->toMediaCollection('cover');
+                        $article->addMediaFromUrl($firstUrl)->toMediaCollection('featured_image');
                     } catch (\Exception $e) {
-                        $this->warn("Failed to download image for '{$title}': " . $e->getMessage());
+                        $this->warn("Failed to download image for '{$title}': ".$e->getMessage());
                     }
                 }
             }
@@ -138,6 +140,7 @@ class ImportWordPressPosts extends Command
         fclose($file);
 
         $this->info("Import completed successfully! Total imported: {$count}");
+
         return 0;
     }
 }

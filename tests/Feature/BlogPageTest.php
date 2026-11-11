@@ -107,4 +107,18 @@ class BlogPageTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee(route('blog'));
     }
+
+    public function test_blog_page_renders_article_image(): void
+    {
+        $article = Article::factory()->create([
+            'title' => 'Article With Image',
+            'status' => 'published',
+            'published_at' => now()->subHour(),
+        ]);
+
+        $response = $this->get('/blog');
+
+        $response->assertStatus(200);
+        $response->assertSee('Article With Image');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\PostArticleToFacebook;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,11 +13,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Tags\HasTags;
-use App\Jobs\PostArticleToFacebook;
 
 class Article extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, InteractsWithMedia, HasTags;
+    use HasFactory, HasSlug, HasTags, InteractsWithMedia;
 
     protected $fillable = ['author_id', 'title', 'slug', 'body', 'published_at', 'status', 'dek', 'meta_title', 'meta_description', 'is_featured'];
 
@@ -28,7 +28,12 @@ class Article extends Model implements HasMedia
     public function scopePublished($query)
     {
         return $query->where('status', 'published')
-                     ->where('published_at', '<=', now());
+            ->where('published_at', '<=', now());
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('featured_image')->singleFile();
     }
 
     protected static function booted()
@@ -44,7 +49,7 @@ class Article extends Model implements HasMedia
             if (
                 $article->status === 'published' &&
                 $article->post_to_facebook &&
-                !$article->posted_to_facebook
+                ! $article->posted_to_facebook
             ) {
                 // If the status just changed to published in this request, dispatch the job
                 if ($article->wasChanged('status') || $article->wasRecentlyCreated) {
