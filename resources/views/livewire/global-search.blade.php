@@ -1,4 +1,4 @@
-<div x-data="{ searchOpen: false }" @open-search.window="searchOpen = true; $nextTick(() => $refs.searchInput.focus())" @keydown.escape.window="searchOpen = false">
+<div wire:ignore.self x-data="{ searchOpen: false }" @open-search.window="searchOpen = true; $nextTick(() => $refs.searchInput.focus())" @keydown.escape.window="searchOpen = false">
     <!-- Search Modal Overlay -->
     <div x-show="searchOpen" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
         <!-- Backdrop -->
@@ -15,7 +15,7 @@
              class="relative min-h-screen md:min-h-0 md:mt-24 md:max-w-3xl mx-auto bg-white w-full md:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
             
             <!-- Search Input -->
-            <div class="relative flex items-center p-2 border-b border-gray-100 bg-gray-50/50">
+            <form wire:submit.prevent="submit" class="relative flex items-center p-2 border-b border-gray-100 bg-gray-50/50">
                 <svg class="w-6 h-6 text-city-accent absolute left-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 <input wire:model.live.debounce.300ms="search" x-ref="searchInput" type="text" placeholder="Search news, businesses, and more..." class="w-full !pl-16 !pr-16 py-5 text-xl font-display font-medium text-ink bg-transparent border-none focus:ring-0 placeholder-gray-400">
                 
@@ -23,10 +23,10 @@
                     <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-city-accent"></div>
                 </div>
 
-                <button @click="searchOpen = false" class="absolute right-6 text-gray-400 hover:text-ink transition-colors bg-white shadow-sm p-1.5 rounded-full border border-gray-100">
+                <button type="button" @click="searchOpen = false" class="absolute right-6 text-gray-400 hover:text-ink transition-colors bg-white shadow-sm p-1.5 rounded-full border border-gray-100">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-            </div>
+            </form>
 
             <!-- Results Area -->
             <div class="overflow-y-auto p-2 flex-grow bg-white">

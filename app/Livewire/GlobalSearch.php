@@ -10,6 +10,18 @@ class GlobalSearch extends Component
 {
     public $search = '';
 
+    public function submit()
+    {
+        if (trim($this->search) !== '') {
+            return redirect()->route('directory', ['search' => trim($this->search)]);
+        }
+    }
+
+    public function resetSearch()
+    {
+        $this->reset('search');
+    }
+
     public function render()
     {
         $articles = [];
@@ -20,7 +32,7 @@ class GlobalSearch extends Component
                 ->with('media')
                 ->where(function ($query) {
                     $query->where('title', 'like', '%'.$this->search.'%')
-                          ->orWhere('body', 'like', '%'.$this->search.'%');
+                        ->orWhere('body', 'like', '%'.$this->search.'%');
                 })
                 ->latest('published_at')
                 ->limit(5)
