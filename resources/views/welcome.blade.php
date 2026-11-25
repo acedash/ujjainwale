@@ -17,6 +17,25 @@
             $carouselItems = $heroItems->take(6); 
             $carouselCount = $carouselItems->count();
         @endphp
+        <style>
+            .hero-carousel-box {
+                min-height: 560px;
+                height: 560px;
+                background-color: #0B132B;
+            }
+            @media (min-width: 768px) {
+                .hero-carousel-box {
+                    min-height: 480px;
+                    height: 480px;
+                }
+            }
+            @media (min-width: 1024px) {
+                .hero-carousel-box {
+                    min-height: 520px;
+                    height: 520px;
+                }
+            }
+        </style>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mt-4 md:mt-6 mb-8 md:mb-12">
             <div x-data="{ 
                     activeSlide: 1,
@@ -28,7 +47,8 @@
                     }
                  }" 
                  x-init="autoPlay()"
-                 class="relative w-full h-[580px] sm:h-[520px] md:h-[480px] lg:h-[520px] overflow-hidden rounded-3xl shadow-2xl group bg-slate-950 border border-slate-800/80">
+                 class="hero-carousel-box relative w-full overflow-hidden rounded-3xl shadow-2xl group border border-slate-800/80"
+                 style="background-color: #0B132B;">
                 
                 <!-- Slides -->
                 <div class="w-full h-full relative">

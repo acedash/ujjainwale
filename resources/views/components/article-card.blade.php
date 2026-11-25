@@ -75,12 +75,11 @@
         </div>
 
         <!-- Right / Top Side: Image with No-Referrer and Fallback -->
-        <div class="w-full md:w-1/2 relative bg-slate-900 order-1 md:order-2 h-56 sm:h-64 md:h-full overflow-hidden shrink-0">
+        <div class="w-full md:w-1/2 relative bg-slate-900 order-1 md:order-2 h-56 sm:h-64 md:h-full overflow-hidden shrink-0" style="background-color: #0f172a;">
             @if($imageUrl)
                 <img src="{{ $imageUrl }}" 
                      alt="{{ $title }}"
                      referrerpolicy="no-referrer"
-                     crossorigin="anonymous"
                      loading="eager"
                      onerror="this.onerror=null; this.src='{{ asset('images/ujjain-wale.jpeg') }}';"
                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
@@ -100,7 +99,7 @@
     <article class="relative w-full h-[60vh] min-h-[500px] max-h-[800px] rounded-sm overflow-hidden group mb-12">
         @if($imageUrl)
             <div class="absolute inset-0 bg-black">
-                <img src="{{ $imageUrl }}" alt="{{ $title }}" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-out">
+                <img src="{{ $imageUrl }}" alt="{{ $title }}" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-out">
             </div>
         @else
             <div class="absolute inset-0 bg-midnight"></div>
@@ -125,7 +124,6 @@
                 <img src="{{ $imageUrl }}" 
                      alt="{{ $title }}" 
                      referrerpolicy="no-referrer"
-                     crossorigin="anonymous"
                      loading="lazy"
                      onerror="this.onerror=null; this.src='{{ asset('images/ujjain-wale.jpeg') }}';"
                      class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-700 ease-out">
@@ -164,7 +162,6 @@
                 <img src="{{ $imageUrl }}" 
                      alt="{{ $title }}" 
                      referrerpolicy="no-referrer"
-                     crossorigin="anonymous"
                      loading="lazy"
                      onerror="this.onerror=null; this.src='{{ asset('images/ujjain-wale.jpeg') }}';"
                      class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-700 ease-out">
@@ -191,7 +188,6 @@
                 <img src="{{ $imageUrl }}" 
                      alt="{{ $title }}" 
                      referrerpolicy="no-referrer"
-                     crossorigin="anonymous"
                      loading="lazy"
                      onerror="this.onerror=null; this.src='{{ asset('images/ujjain-wale.jpeg') }}';"
                      class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-700 ease-out">
