@@ -406,12 +406,15 @@
                         <div class="space-y-6">
                             @foreach($sideStories as $story)
                                 @php
-                                    $storyImg = $story->getFirstMediaUrl('featured_image') ?: $story->getFirstMediaUrl('cover');
-                                    $storyCat = $story->categories->first()?->name ?? 'Breaking';
+                                    $isExt = $story instanceof \App\Models\ExternalHeadline;
+                                    $storyImg = $isExt ? $story->thumbnail_url : ($story->getFirstMediaUrl('featured_image') ?: $story->getFirstMediaUrl('cover'));
+                                    $storyCat = $story->categories->first()?->name ?? ($isExt ? $story->newsSource?->name : 'Breaking');
+                                    $storyUrl = $isExt ? route('external.show', $story) : route('articles.show', $story);
+                                    $storyDate = ($story->published_at ?? $story->created_at)?->format('M j, Y');
                                 @endphp
                                 <article class="flex items-start gap-4 group pt-4 first:pt-0">
                                     @if($storyImg)
-                                        <a href="{{ route('articles.show', $story) }}" class="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-gray-100 block">
+                                        <a href="{{ $storyUrl }}" class="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-gray-100 block">
                                             <img src="{{ $storyImg }}" alt="{{ $story->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                         </a>
                                     @endif
@@ -420,10 +423,10 @@
                                             {{ str_replace('उज्जैन>', '', $storyCat) }}
                                         </span>
                                         <h3 class="font-sans font-bold text-base text-ink group-hover:text-amber-700 transition-colors line-clamp-2 leading-snug">
-                                            <a href="{{ route('articles.show', $story) }}">{{ $story->title }}</a>
+                                            <a href="{{ $storyUrl }}">{{ $story->title }}</a>
                                         </h3>
                                         <span class="text-[11px] font-sans font-medium text-gray-400 mt-2 block uppercase tracking-wide">
-                                            {{ $story->published_at?->format('M j, Y') }}
+                                            {{ $storyDate }}
                                         </span>
                                     </div>
                                 </article>
@@ -443,7 +446,7 @@
         <!-- ============================================== -->
         <!-- 3. CATEGORY 1 (Curated Featured Category)     -->
         <!-- ============================================== -->
-        @if($category1 && $category1->articles->isNotEmpty())
+        @if($category1 && $category1->feedItems->isNotEmpty())
             @php
                 $cat1Name = str_replace('उज्जैन>', '', $category1->name);
             @endphp
@@ -463,7 +466,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach($category1->articles->take(4) as $article)
+                    @foreach($category1->feedItems->take(4) as $article)
                         <x-article-card :article="$article" variant="standard" />
                     @endforeach
                 </div>
@@ -532,7 +535,7 @@
         <!-- ============================================== -->
         <!-- 4. CATEGORY 2 (Curated Featured Category)     -->
         <!-- ============================================== -->
-        @if($category2 && $category2->articles->isNotEmpty())
+        @if($category2 && $category2->feedItems->isNotEmpty())
             @php
                 $cat2Name = str_replace('उज्जैन>', '', $category2->name);
             @endphp
@@ -552,7 +555,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach($category2->articles->take(4) as $article)
+                    @foreach($category2->feedItems->take(4) as $article)
                         <x-article-card :article="$article" variant="standard" />
                     @endforeach
                 </div>
@@ -562,7 +565,7 @@
         <!-- ============================================== -->
         <!-- 5. CATEGORY 3 (Curated Featured Category)     -->
         <!-- ============================================== -->
-        @if($category3 && $category3->articles->isNotEmpty())
+        @if($category3 && $category3->feedItems->isNotEmpty())
             @php
                 $cat3Name = str_replace('उज्जैन>', '', $category3->name);
             @endphp
@@ -582,8 +585,75 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach($category3->articles->take(4) as $article)
+                    @foreach($category3->feedItems->take(4) as $article)
                         <x-article-card :article="$article" variant="standard" />
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- ============================================== -->
+        <!-- LIVE AGGREGATED UJJAIN HEADLINES (दैनिक भास्कर & लाइव हिन्दुस्तान) -->
+        <!-- ============================================== -->
+        @if(isset($latestHeadlines) && $latestHeadlines->isNotEmpty())
+            <section aria-label="Latest Live Headlines" class="bg-gradient-to-br from-amber-50/60 via-white to-orange-50/50 rounded-3xl p-6 md:p-8 border border-amber-200/90 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-amber-200/70 gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                            </span>
+                            <span class="text-[10px] font-sans font-black uppercase tracking-widest text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
+                                Live Aggregated Updates &middot; ताज़ा सुर्खियां
+                            </span>
+                        </div>
+                        <h2 class="font-display font-black text-2xl md:text-3xl text-ink uppercase tracking-tight">
+                            Latest Ujjain Headlines
+                        </h2>
+                    </div>
+                    <a href="{{ route('external.index') }}" class="inline-flex items-center gap-1 font-sans font-bold text-xs text-amber-900 hover:text-amber-700 bg-amber-200/70 hover:bg-amber-200 px-4 py-2 rounded-xl transition-all border border-amber-300 shadow-sm self-start sm:self-auto">
+                        View All Trending News &rarr;
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($latestHeadlines as $headline)
+                        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                            <div>
+                                @if($headline->thumbnail_url)
+                                    <div class="h-44 -mx-5 -mt-5 mb-4 overflow-hidden rounded-t-2xl bg-gray-100">
+                                        <img src="{{ $headline->thumbnail_url }}" alt="{{ $headline->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    </div>
+                                @endif
+                                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                                    <span class="text-[10px] font-sans font-black text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-wider">
+                                        {{ $headline->newsSource?->name ?: 'News' }}
+                                    </span>
+                                    @if($headline->categories->isNotEmpty())
+                                        @foreach($headline->categories->take(2) as $hCat)
+                                            <span class="text-[10px] font-sans font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                                                {{ $hCat->name }}
+                                            </span>
+                                        @endforeach
+                                    @endif
+                                </div>
+                                <h3 class="font-display font-bold text-base text-ink group-hover:text-amber-800 transition-colors line-clamp-2 leading-snug mb-2">
+                                    <a href="{{ route('external.show', $headline) }}">{{ $headline->title }}</a>
+                                </h3>
+                                @if($headline->original_snippet)
+                                    <p class="text-xs text-gray-600 line-clamp-2 font-light leading-relaxed mb-4">
+                                        {{ $headline->original_snippet }}
+                                    </p>
+                                @endif
+                            </div>
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 text-[11px] font-sans text-gray-400">
+                                <span>{{ ($headline->published_at ?? $headline->fetched_at)?->diffForHumans() }}</span>
+                                <a href="{{ route('external.show', $headline) }}" class="font-bold text-amber-800 hover:text-amber-900">
+                                    Read Story &rarr;
+                                </a>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             </section>

@@ -24,26 +24,38 @@ class HomeController extends Controller
         $featuredExternal = ExternalHeadline::with(['categories', 'newsSource'])
             ->where('is_featured', true)
             ->latest('published_at')
-            ->take(1)
+            ->take(2)
             ->get();
 
         $heroItems = $featuredArticles->concat($featuredExternal)->sortByDesc('published_at')->take(4)->values();
 
         if ($heroItems->count() < 4) {
             $existingArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
-            $fillArticles = Article::with(['categories', 'author'])
-                ->published()
-                ->whereNotIn('id', $existingArticleIds)
+            $existingExternalIds = $heroItems->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray();
+
+            $fillExternal = ExternalHeadline::with(['categories', 'newsSource'])
+                ->whereNotIn('id', $existingExternalIds)
+                ->whereNotNull('thumbnail_url')
                 ->latest('published_at')
                 ->take(4 - $heroItems->count())
                 ->get();
-            $heroItems = $heroItems->concat($fillArticles)->values();
+            $heroItems = $heroItems->concat($fillExternal)->values();
+
+            if ($heroItems->count() < 4) {
+                $fillArticles = Article::with(['categories', 'author'])
+                    ->published()
+                    ->whereNotIn('id', $existingArticleIds)
+                    ->latest('published_at')
+                    ->take(4 - $heroItems->count())
+                    ->get();
+                $heroItems = $heroItems->concat($fillArticles)->values();
+            }
         }
 
         $usedArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
         $usedExternalIds = $heroItems->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray();
 
-        // 2. Breaking News (Curated top 4 urgent/latest stories, strictly not all news)
+        // 2. Breaking News (Curated top 4 urgent/latest stories)
         $breakingNews = Article::with(['categories', 'author'])
             ->published()
             ->whereNotIn('id', $usedArticleIds)
@@ -51,9 +63,19 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        $usedArticleIds = array_merge($usedArticleIds, $breakingNews->pluck('id')->toArray());
+        if ($breakingNews->count() < 4) {
+            $fillBreaking = ExternalHeadline::with(['categories', 'newsSource'])
+                ->whereNotIn('id', $usedExternalIds)
+                ->latest('published_at')
+                ->take(4 - $breakingNews->count())
+                ->get();
+            $breakingNews = $breakingNews->concat($fillBreaking)->sortByDesc('published_at')->values();
+        }
 
-        // 3. Category 1, Category 2, Category 3 (Curated top 3 editorial categories)
+        $usedArticleIds = array_merge($usedArticleIds, $breakingNews->whereInstanceOf(Article::class)->pluck('id')->toArray());
+        $usedExternalIds = array_merge($usedExternalIds, $breakingNews->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray());
+
+        // 3. Category 1, Category 2, Category 3 (Curated top editorial & local categories)
         $categories = Category::whereIn('type', ['news', 'both'])
             ->whereNotIn('slug', [
                 'makhapashhatha',
@@ -63,21 +85,38 @@ class HomeController extends Controller
                 'sports',
                 'food',
             ])
-            ->with(['articles' => function ($query) use ($usedArticleIds) {
-                $query->published()
-                    ->whereNotIn('articles.id', $usedArticleIds)
-                    ->latest('published_at')
-                    ->limit(4)
-                    ->with(['categories', 'author']);
-            }])
-            ->get()
-            ->filter(fn ($cat) => $cat->articles->count() >= 2)
-            ->sortByDesc(fn ($cat) => $cat->articles->count())
+            ->with([
+                'articles' => function ($query) use ($usedArticleIds) {
+                    $query->published()
+                        ->whereNotIn('articles.id', $usedArticleIds)
+                        ->latest('published_at')
+                        ->limit(6)
+                        ->with(['categories', 'author']);
+                },
+                'externalHeadlines' => function ($query) use ($usedExternalIds) {
+                    $query->whereNotIn('external_headlines.id', $usedExternalIds)
+                        ->latest('published_at')
+                        ->limit(6)
+                        ->with(['categories', 'newsSource']);
+                },
+            ])
+            ->get();
+
+        foreach ($categories as $cat) {
+            $cat->feedItems = $cat->articles->concat($cat->externalHeadlines)
+                ->sortByDesc(fn ($item) => $item->published_at ?? $item->created_at)
+                ->take(4)
+                ->values();
+        }
+
+        $activeCategories = $categories
+            ->filter(fn ($cat) => $cat->feedItems->count() >= 2)
+            ->sortByDesc(fn ($cat) => $cat->feedItems->count())
             ->values();
 
-        $category1 = $categories->get(0);
-        $category2 = $categories->get(1);
-        $category3 = $categories->get(2);
+        $category1 = $activeCategories->get(0);
+        $category2 = $activeCategories->get(1);
+        $category3 = $activeCategories->get(2);
 
         // 4. Yellow Pages / Local Businesses Showcase
         $featuredBusinesses = Business::with(['categories', 'neighborhoods'])
@@ -86,11 +125,14 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        // Top ticker & neighborhoods
+        // 5. Top ticker, neighborhoods & latest external headlines
         $neighborhoods = Neighborhood::orderBy('name')->get();
-        $externalHeadlines = ExternalHeadline::with('newsSource')->latest('published_at')->take(8)->get();
+        $latestHeadlines = ExternalHeadline::with(['categories', 'newsSource'])
+            ->latest('published_at')
+            ->take(6)
+            ->get();
 
-        // 5. Admin-managed advertisements
+        // 6. Admin-managed advertisements
         $advertisements = Advertisement::with('media')
             ->active()
             ->orderBy('order')
@@ -105,7 +147,7 @@ class HomeController extends Controller
             'category3',
             'featuredBusinesses',
             'neighborhoods',
-            'externalHeadlines',
+            'latestHeadlines',
             'advertisements'
         ));
     }
