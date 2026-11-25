@@ -415,10 +415,10 @@
 
                 @php
                     $leadStory = $breakingNews->first();
-                    $sideStories = $breakingNews->skip(1)->take(3);
+                    $sideStories = $breakingNews->skip(1)->take(5);
                 @endphp
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     <!-- Main Lead Breaking Story (Left 7 Cols) -->
                     @if($leadStory)
                         <div class="lg:col-span-7">
@@ -427,40 +427,59 @@
                     @endif
 
                     <!-- Side Breaking Stories (Right 5 Cols) -->
-                    <div class="lg:col-span-5 flex flex-col justify-between divide-y divide-gray-100 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                        <div class="space-y-6">
+                    <div class="lg:col-span-5 flex flex-col justify-between divide-y divide-gray-100 bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
+                        <div class="space-y-4">
                             @foreach($sideStories as $story)
                                 @php
                                     $isExt = $story instanceof \App\Models\ExternalHeadline;
-                                    $storyImg = $isExt ? $story->thumbnail_url : ($story->getFirstMediaUrl('featured_image') ?: $story->getFirstMediaUrl('cover'));
-                                    $storyCat = $story->categories->first()?->name ?? ($isExt ? $story->newsSource?->name : 'Breaking');
+                                    $storyImg = $isExt ? $story->thumbnail_url : ($story->getFirstMediaUrl('featured_image') ?: ($story->getFirstMediaUrl('cover') ?: $story->getFirstMediaUrl('media')));
+                                    $storyCat = $story->categories->first()?->name ?? ($isExt ? ($story->newsSource?->name ?: 'Live News') : 'News');
                                     $storyUrl = $isExt ? route('external.show', $story) : route('articles.show', $story);
-                                    $storyDate = ($story->published_at ?? $story->created_at)?->format('M j, Y');
+                                    $storyTime = $story->published_at ? ($story->published_at->isToday() ? $story->published_at->diffForHumans() : $story->published_at->format('M j, Y')) : ($story->created_at?->format('M j, Y') ?? 'Recent');
                                 @endphp
-                                <article class="flex items-start gap-4 group pt-4 first:pt-0">
-                                    @if($storyImg)
-                                        <a href="{{ $storyUrl }}" class="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-gray-100 block">
-                                            <img src="{{ $storyImg }}" alt="{{ $story->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                        </a>
-                                    @endif
-                                    <div class="flex-grow">
-                                        <span class="text-amber-800 font-sans font-bold text-[10px] tracking-wider uppercase block mb-1">
-                                            {{ str_replace('उज्जैन>', '', $storyCat) }}
-                                        </span>
-                                        <h3 class="font-sans font-bold text-base text-ink group-hover:text-amber-700 transition-colors line-clamp-2 leading-snug">
+                                <article class="flex items-start gap-4 group pt-3.5 first:pt-0">
+                                    <a href="{{ $storyUrl }}" class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-gray-100 block border border-gray-100 shadow-xs relative">
+                                        @if($storyImg)
+                                            <img src="{{ $storyImg }}" 
+                                                 alt="{{ $story->title }}" 
+                                                 referrerpolicy="no-referrer"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null; this.src='{{ asset('images/ujjain-wale.jpeg') }}';"
+                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        @else
+                                            <img src="{{ asset('images/ujjain-wale.jpeg') }}" 
+                                                 alt="{{ $story->title }}" 
+                                                 class="w-full h-full object-cover opacity-80">
+                                        @endif
+                                        @if($isExt)
+                                            <span class="absolute bottom-1 right-1 bg-red-600 text-white text-[8px] font-sans font-bold px-1.5 py-0.2 rounded uppercase">Live</span>
+                                        @endif
+                                    </a>
+                                    <div class="flex-grow min-w-0">
+                                        <div class="flex items-center gap-1.5 mb-1">
+                                            @if($isExt)
+                                                <span class="text-[9px] font-sans font-black text-red-700 bg-red-50 border border-red-200 px-1.5 py-0.2 rounded uppercase tracking-wider">
+                                                    {{ $story->newsSource?->name ?: 'Live' }}
+                                                </span>
+                                            @endif
+                                            <span class="text-amber-800 font-sans font-bold text-[10px] tracking-wider uppercase truncate">
+                                                {{ str_replace('उज्जैन>', '', $storyCat) }}
+                                            </span>
+                                        </div>
+                                        <h3 class="font-sans font-bold text-sm sm:text-base text-ink group-hover:text-red-600 transition-colors line-clamp-2 leading-snug mb-1">
                                             <a href="{{ $storyUrl }}">{{ $story->title }}</a>
                                         </h3>
-                                        <span class="text-[11px] font-sans font-medium text-gray-400 mt-2 block uppercase tracking-wide">
-                                            {{ $storyDate }}
+                                        <span class="text-[10px] sm:text-[11px] font-sans font-medium text-gray-400 block tracking-wide">
+                                            {{ $storyTime }}
                                         </span>
                                     </div>
                                 </article>
                             @endforeach
                         </div>
 
-                        <div class="pt-6 mt-6 border-t border-gray-100">
-                            <a href="{{ route('blog') }}" class="w-full py-2.5 text-center block bg-gray-50 hover:bg-gray-100 text-ink font-sans font-bold text-xs uppercase tracking-wider rounded-xl transition-colors">
-                                Browse All News Stories &rarr;
+                        <div class="pt-4 mt-4 border-t border-gray-100">
+                            <a href="{{ url('/trending') }}" class="w-full py-2.5 text-center block bg-gray-50 hover:bg-gray-100 text-ink font-sans font-bold text-xs uppercase tracking-wider rounded-xl transition-colors">
+                                Browse All Live &amp; Trending Stories &rarr;
                             </a>
                         </div>
                     </div>

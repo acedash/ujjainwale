@@ -70,22 +70,24 @@ class HomeController extends Controller
         $usedArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
         $usedExternalIds = $heroItems->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray();
 
-        // 2. Breaking News (Curated top 4 urgent/latest stories)
-        $breakingNews = Article::with(['categories', 'author'])
-            ->published()
-            ->whereNotIn('id', $usedArticleIds)
+        // 2. Breaking News (Curated mix of top live news sources + editorial stories)
+        $breakingExternal = ExternalHeadline::with(['categories', 'newsSource'])
+            ->whereNotIn('id', $usedExternalIds)
             ->latest('published_at')
             ->take(4)
             ->get();
 
-        if ($breakingNews->count() < 4) {
-            $fillBreaking = ExternalHeadline::with(['categories', 'newsSource'])
-                ->whereNotIn('id', $usedExternalIds)
-                ->latest('published_at')
-                ->take(4 - $breakingNews->count())
-                ->get();
-            $breakingNews = $breakingNews->concat($fillBreaking)->sortByDesc('published_at')->values();
-        }
+        $breakingArticles = Article::published()
+            ->with(['categories', 'author', 'media'])
+            ->whereNotIn('id', $usedArticleIds)
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        $breakingNews = $breakingExternal->concat($breakingArticles)
+            ->sortByDesc(fn ($item) => $item->published_at ?? $item->created_at)
+            ->take(6)
+            ->values();
 
         $usedArticleIds = array_merge($usedArticleIds, $breakingNews->whereInstanceOf(Article::class)->pluck('id')->toArray());
         $usedExternalIds = array_merge($usedExternalIds, $breakingNews->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray());
