@@ -161,6 +161,7 @@
                                                        class="block w-full">
                                                         <img src="{{ $bImg }}" 
                                                              alt="{{ $billboardAd->title }}" 
+                                                             onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
                                                              class="w-full h-auto max-h-[280px] sm:max-h-[320px] md:max-h-[380px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
                                                              loading="lazy" 
                                                              referrerpolicy="no-referrer">
@@ -255,6 +256,7 @@
                                        class="block w-full">
                                         <img src="{{ $bImg }}" 
                                              alt="{{ $singleAd->title }}" 
+                                             onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
                                              class="w-full h-auto max-h-[280px] sm:max-h-[320px] md:max-h-[380px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
                                              loading="lazy" 
                                              referrerpolicy="no-referrer">
@@ -324,6 +326,7 @@
                             <a href="{{ route('directory.register') }}" class="block w-full">
                                 <img src="{{ asset('images/ads/banner-advertise.svg') }}" 
                                      alt="Advertise on UjjainWale - 50,000+ Daily Readers" 
+                                     onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
                                      class="w-full h-auto max-h-[280px] sm:max-h-[320px] md:max-h-[380px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
                                      loading="lazy">
                             </a>
@@ -665,6 +668,7 @@
                            class="block w-full">
                             <img src="{{ $inFeedImg }}" 
                                  alt="{{ $inFeedAd->title }}" 
+                                 onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
                                  class="w-full h-auto max-h-[240px] sm:max-h-[280px] md:max-h-[300px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
                                  loading="lazy" 
                                  referrerpolicy="no-referrer">
