@@ -15,8 +15,8 @@ class HomeController extends Controller
     {
         // 1. Hero Carousel Items (A dynamic curated blend of top Blog articles + top Live News sources)
         // A. Priority to explicitly featured items
-        $featuredArticles = Article::with(['categories', 'author', 'media'])
-            ->published()
+        $featuredArticles = Article::published()
+            ->with(['categories', 'author', 'media'])
             ->where('is_featured', true)
             ->latest('published_at')
             ->take(3)
@@ -24,31 +24,27 @@ class HomeController extends Controller
 
         $featuredExternal = ExternalHeadline::with(['categories', 'newsSource'])
             ->where('is_featured', true)
-            ->whereNotNull('thumbnail_url')
-            ->where('thumbnail_url', '!=', '')
             ->latest('published_at')
             ->take(3)
             ->get();
 
         // B. Ensure both Blog articles AND External news sources are represented
-        $latestBlogArticles = Article::with(['categories', 'author', 'media'])
-            ->published()
+        $latestBlogArticles = Article::published()
+            ->with(['categories', 'author', 'media'])
             ->whereNotIn('id', $featuredArticles->pluck('id'))
             ->latest('published_at')
-            ->take(max(0, 3 - $featuredArticles->count()))
+            ->take(3)
             ->get();
 
         $latestExternalNews = ExternalHeadline::with(['categories', 'newsSource'])
             ->whereNotIn('id', $featuredExternal->pluck('id'))
-            ->whereNotNull('thumbnail_url')
-            ->where('thumbnail_url', '!=', '')
             ->latest('published_at')
-            ->take(max(0, 3 - $featuredExternal->count()))
+            ->take(3)
             ->get();
 
         // Merge: Blog Articles + External News sources
-        $blogItems = $featuredArticles->concat($latestBlogArticles);
-        $externalItems = $featuredExternal->concat($latestExternalNews);
+        $blogItems = $featuredArticles->concat($latestBlogArticles)->unique('id')->values();
+        $externalItems = $featuredExternal->concat($latestExternalNews)->unique('id')->values();
 
         // Interleave to give an engaging carousel alternating between top live news and in-depth blog stories
         $heroItems = collect();
@@ -61,6 +57,14 @@ class HomeController extends Controller
                 $heroItems->push($blogItems->get($i));
             }
         }
+
+        // Failsafe: if for any reason it's still empty, grab any latest published articles or headlines
+        if ($heroItems->isEmpty()) {
+            $fallbackArticles = Article::published()->latest('published_at')->take(3)->get();
+            $fallbackHeadlines = ExternalHeadline::latest('published_at')->take(3)->get();
+            $heroItems = $fallbackHeadlines->concat($fallbackArticles)->take(6)->values();
+        }
+
         $heroItems = $heroItems->take(6)->values();
 
         $usedArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
