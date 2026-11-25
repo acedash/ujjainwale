@@ -12,7 +12,10 @@
 <footer class="border-t border-dark-accent py-12 bg-midnight text-white">
     <div class="max-w-7xl mx-auto px-8 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-            <img src="{{ asset('images/ujjain-wale.jpeg') }}" alt="Ujjain Logo" class="h-10 w-auto mb-4 transition-all opacity-90 hover:opacity-100">
+            <img src="{{ asset('images/ujjain-wale.jpeg') }}" 
+                 alt="Ujjain Wale Logo" 
+                 onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
+                 class="h-14 w-auto rounded-lg mb-4 transition-all opacity-90 hover:opacity-100">
             <p class="font-sans text-sm text-gray-400">The premier local news and business directory for the city.</p>
         </div>
         <div>

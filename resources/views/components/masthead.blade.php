@@ -5,12 +5,11 @@
             <div class="flex items-center gap-6 lg:gap-10">
                 <!-- Logo & Brand Name -->
                 <div class="flex items-center gap-4">
-                    <a href="/" class="flex items-center gap-3 relative z-50 group">
-                        <img src="{{ asset('images/ujjain-wale.jpeg') }}" alt="Ujjain Wale Logo" class="h-10 w-auto rounded shadow-sm border border-yellow-300/80 group-hover:scale-105 transition-transform">
-                        <div class="flex flex-col">
-                            <span class="font-display font-black text-lg tracking-tight text-ink uppercase leading-none">Ujjain<span class="text-amber-600">Wale</span></span>
-                            <span class="text-[9px] font-sans font-bold tracking-widest text-gray-400 uppercase mt-0.5">The City Journal</span>
-                        </div>
+                    <a href="/" class="flex items-center relative z-50 group" aria-label="Ujjain Wale Home">
+                        <img src="{{ asset('images/ujjain-wale.jpeg') }}" 
+                             alt="Ujjain Wale" 
+                             onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
+                             class="h-12 sm:h-14 md:h-16 w-auto rounded-xl shadow-xs border border-amber-300/80 group-hover:scale-105 transition-all duration-300">
                     </a>
                     
                     <!-- Weather / Date (Desktop only) -->
