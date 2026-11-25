@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\NewsSourceResource\Pages;
-use App\Filament\Resources\NewsSourceResource\RelationManagers;
 use App\Models\NewsSource;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class NewsSourceResource extends Resource
 {
@@ -68,6 +65,11 @@ class NewsSourceResource extends Resource
                 Tables\Columns\TextColumn::make('feed_url')
                     ->limit(50)
                     ->color('gray'),
+                Tables\Columns\TextColumn::make('defaultCategory.name')
+                    ->label('Default Category')
+                    ->badge()
+                    ->color('success')
+                    ->placeholder('Smart Keyword Tagging'),
                 Tables\Columns\ToggleColumn::make('active'),
             ])
             ->defaultSort('name', 'asc')

@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\ExternalHeadlineResource\Pages;
 
 use App\Filament\Resources\ExternalHeadlineResource;
+use App\Services\HeadlineCategorizerService;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageExternalHeadlines extends ManageRecords
@@ -13,6 +15,21 @@ class ManageExternalHeadlines extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('auto_categorize')
+                ->label('Auto-Categorize Headlines')
+                ->icon('heroicon-o-sparkles')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalHeading('Auto-Categorize Headlines')
+                ->modalDescription('Scan and categorize all headlines using Ujjain local news keywords (Mahakal, Dharma, City, Crime, Politics, Business, Weather, Sports).')
+                ->action(function () {
+                    $count = app(HeadlineCategorizerService::class)->categorizeAll();
+                    Notification::make()
+                        ->title('Categorization Complete')
+                        ->body("Categorized {$count} headlines successfully.")
+                        ->success()
+                        ->send();
+                }),
             Actions\CreateAction::make(),
         ];
     }

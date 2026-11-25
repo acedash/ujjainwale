@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExternalHeadlineResource\Pages;
-use App\Filament\Resources\ExternalHeadlineResource\RelationManagers;
 use App\Models\ExternalHeadline;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExternalHeadlineResource extends Resource
 {
@@ -26,6 +23,11 @@ class ExternalHeadlineResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('categories')
+                    ->relationship('categories', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->label('Categories'),
                 Forms\Components\Toggle::make('is_featured')
                     ->label('Featured Hero Article')
                     ->helperText('If enabled, this article may be prioritized in the homepage hero section.'),
@@ -49,6 +51,11 @@ class ExternalHeadlineResource extends Resource
                     ->searchable()
                     ->badge()
                     ->color('info'),
+                Tables\Columns\TextColumn::make('categories.name')
+                    ->label('Categories')
+                    ->badge()
+                    ->color('warning')
+                    ->separator(', '),
                 Tables\Columns\ToggleColumn::make('is_featured')
                     ->label('Featured')
                     ->sortable(),
@@ -61,6 +68,9 @@ class ExternalHeadlineResource extends Resource
                 Tables\Filters\SelectFilter::make('news_source_id')
                     ->relationship('newsSource', 'name')
                     ->label('Source'),
+                Tables\Filters\SelectFilter::make('categories')
+                    ->relationship('categories', 'name')
+                    ->label('Category'),
                 Tables\Filters\TernaryFilter::make('is_featured')
                     ->label('Featured Only'),
             ])

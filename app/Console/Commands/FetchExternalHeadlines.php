@@ -2,7 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
+use App\Models\ExternalHeadline;
+use App\Models\NewsSource;
+use App\Services\HeadlineCategorizerService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use SimplePie\SimplePie;
 
 class FetchExternalHeadlines extends Command
 {
@@ -20,22 +27,22 @@ class FetchExternalHeadlines extends Command
      */
     public function handle()
     {
-        $sources = \App\Models\NewsSource::where('active', true)->get();
-        
+        $sources = NewsSource::where('active', true)->get();
+
         $this->info("Found {$sources->count()} active sources.");
         $newCount = 0;
 
         foreach ($sources as $source) {
             $this->info("Fetching: {$source->name}");
-            
+
             try {
-                $feed = new \SimplePie\SimplePie();
+                $feed = new SimplePie;
                 $feed->set_feed_url($source->feed_url);
                 $feed->enable_cache(false);
                 $feed->init();
-                
+
                 $items = $feed->get_items();
-                
+
                 foreach ($items as $item) {
                     $guid = $item->get_id();
                     if (empty($guid)) {
@@ -44,11 +51,13 @@ class FetchExternalHeadlines extends Command
                         $guid = hash('sha256', $guid);
                     }
 
-                    $headline = \App\Models\ExternalHeadline::where('guid', $guid)->first();
+                    $headline = ExternalHeadline::where('guid', $guid)->first();
 
-                    if (!$headline) {
+                    if (! $headline) {
                         $title = $item->get_title();
-                        if (empty($title)) continue; // skip items without titles
+                        if (empty($title)) {
+                            continue;
+                        } // skip items without titles
 
                         $snippet = strip_tags($item->get_description() ?? '');
 
@@ -57,7 +66,7 @@ class FetchExternalHeadlines extends Command
                             $thumbnail = $enclosure->get_link();
                         }
 
-                        $headline = \App\Models\ExternalHeadline::create([
+                        $headline = ExternalHeadline::create([
                             'news_source_id' => $source->id,
                             'title' => $title,
                             'original_snippet' => $snippet,
@@ -78,25 +87,28 @@ class FetchExternalHeadlines extends Command
                     if ($categories = $item->get_categories()) {
                         foreach ($categories as $rssCategory) {
                             $term = trim($rssCategory->get_label() ?? $rssCategory->get_term());
-                            if (!empty($term)) {
-                                $category = \App\Models\Category::firstOrCreate(
-                                    ['slug' => \Illuminate\Support\Str::slug($term)],
+                            if (! empty($term)) {
+                                $category = Category::firstOrCreate(
+                                    ['slug' => Str::slug($term)],
                                     [
                                         'name' => $term,
-                                        'type' => 'news'
+                                        'type' => 'news',
                                     ]
                                 );
                                 $headline->categories()->syncWithoutDetaching([$category->id]);
                             }
                         }
                     }
+
+                    // Auto-categorize based on title & description content
+                    app(HeadlineCategorizerService::class)->categorize($headline);
                 }
             } catch (\Exception $e) {
-                $this->error("Error fetching {$source->name}: " . $e->getMessage());
-                \Illuminate\Support\Facades\Log::error("FetchExternalHeadlines error for {$source->name}: " . $e->getMessage());
+                $this->error("Error fetching {$source->name}: ".$e->getMessage());
+                Log::error("FetchExternalHeadlines error for {$source->name}: ".$e->getMessage());
             }
         }
-        
+
         $this->info("Fetch complete. Added {$newCount} new headlines.");
     }
 }

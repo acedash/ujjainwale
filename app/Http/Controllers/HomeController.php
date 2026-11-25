@@ -55,7 +55,14 @@ class HomeController extends Controller
 
         // 3. Category 1, Category 2, Category 3 (Curated top 3 editorial categories)
         $categories = Category::whereIn('type', ['news', 'both'])
-            ->whereNotIn('slug', ['makhapashhatha', 'vashashhasahatayahatha-lghakathae'])
+            ->whereNotIn('slug', [
+                'makhapashhatha',
+                'vashashhasahatayahatha-lghakathae',
+                'business',
+                'civic',
+                'sports',
+                'food',
+            ])
             ->with(['articles' => function ($query) use ($usedArticleIds) {
                 $query->published()
                     ->whereNotIn('articles.id', $usedArticleIds)
