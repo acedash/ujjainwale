@@ -1,62 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="1200" height="240">
   <defs>
-    <linearGradient id="jewelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2d1600"/>
-      <stop offset="45%" stop-color="#422006"/>
-      <stop offset="100%" stop-color="#1c0f03"/>
+    <linearGradient id="jewelBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c0f03"/>
+      <stop offset="50%" stop-color="#2d1600"/>
+      <stop offset="100%" stop-color="#3d1f05"/>
     </linearGradient>
-    <linearGradient id="jewelGold" x1="0%" y1="0%" x2="100%" y2="0%">
+
+    <radialGradient id="jewelGlow" cx="80%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#eab308" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="goldLinear" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#fef08a"/>
-      <stop offset="50%" stop-color="#eab308"/>
-      <stop offset="100%" stop-color="#ca8a04"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#eab308"/>
     </linearGradient>
-    <filter id="jShadow" x="-5%" y="-5%" width="110%" height="110%">
-      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.4"/>
+
+    <filter id="jShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
     </filter>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="240" rx="18" fill="url(#jewelGrad)"/>
-  
-  <!-- Subtle border -->
-  <rect x="2" y="2" width="1196" height="236" rx="16" fill="none" stroke="#eab308" stroke-width="1.5" stroke-opacity="0.4"/>
+  <rect width="1200" height="240" rx="18" fill="url(#jewelBg)"/>
+  <rect width="1200" height="240" rx="18" fill="url(#jewelGlow)"/>
+  <rect x="1.5" y="1.5" width="1197" height="237" rx="17" fill="none" stroke="#eab308" stroke-width="1.2" stroke-opacity="0.3"/>
 
-  <!-- Left Icon Emblem -->
-  <g transform="translate(50, 45)">
-    <rect width="76" height="76" rx="16" fill="#1c0f03" stroke="#eab308" stroke-width="2" filter="url(#jShadow)"/>
-    <text x="38" y="52" font-size="38" text-anchor="middle" dominant-baseline="central">💎</text>
+  <!-- Right Visual Art: Big Gem Graphic -->
+  <g transform="translate(920, 120)">
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#eab308" stroke-width="1.5" stroke-opacity="0.2" stroke-dasharray="6 6"/>
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#facc15" stroke-width="2" stroke-opacity="0.3"/>
+    <text x="0" y="20" font-size="75" text-anchor="middle" dominant-baseline="central">💎</text>
   </g>
 
-  <!-- Badges Top Left -->
-  <g transform="translate(145, 38)">
-    <rect width="110" height="24" rx="5" fill="#ca8a04" fill-opacity="0.3" stroke="#eab308" stroke-width="1"/>
-    <text x="55" y="16" fill="#fef08a" font-family="system-ui, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1">SPECIAL SPONSOR</text>
-  </g>
-  <g transform="translate(265, 38)">
-    <rect width="180" height="24" rx="5" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-width="0.8" stroke-opacity="0.2"/>
-    <text x="90" y="16" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="middle">50 YEARS OF TRUST IN UJJAIN</text>
-  </g>
+  <!-- Content -->
+  <g transform="translate(60, 48)">
+    <g transform="translate(0, 0)">
+      <rect width="145" height="26" rx="13" fill="#ca8a04" fill-opacity="0.2" stroke="#eab308" stroke-width="1" stroke-opacity="0.4"/>
+      <circle cx="14" cy="13" r="3.5" fill="#facc15"/>
+      <text x="82" y="17" fill="#fef08a" font-family="system-ui, sans-serif" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1">SPECIAL SPONSOR</text>
+    </g>
 
-  <!-- Main Headline -->
-  <text x="145" y="100" fill="url(#jewelGold)" font-family="system-ui, sans-serif" font-size="28" font-weight="900" letter-spacing="-0.3">
-    सुभाष ज्वेलर्स • 100% BIS हॉलमार्क स्वर्ण एवं हीरक आभूषण
-  </text>
+    <!-- Big Title -->
+    <text x="0" y="68" fill="url(#goldLinear)" font-family="system-ui, sans-serif" font-size="36" font-weight="900" letter-spacing="-0.5" filter="url(#jShadow)">
+      सुभाष ज्वेलर्स • सराफा बाजार, उज्जैन
+    </text>
 
-  <!-- Subtitle -->
-  <text x="145" y="138" fill="#fde68a" font-family="system-ui, sans-serif" font-size="15" font-weight="600">
-    सराफा बाजार, उज्जैन • शादी-विवाह व त्योहारों की विशेष खरीदारी पर मेकिंग चार्ज पर विशेष छूट!
-  </text>
-  <text x="145" y="165" fill="#d6d3d1" font-family="system-ui, sans-serif" font-size="13" font-weight="400">
-    शुद्धता की गारंटी, आधुनिक व पारम्परिक डिजाइन्स की विशाल श्रृंखला।
-  </text>
+    <!-- Short Tagline -->
+    <text x="0" y="102" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="16" font-weight="500" opacity="0.9">
+      100% BIS हॉलमार्क शुद्ध स्वर्ण एवं हीरक आभूषण • 50 वर्षों का अटूट विश्वास
+    </text>
 
-  <!-- Right Section -->
-  <g transform="translate(900, 50)">
-    <text x="130" y="25" fill="#fde047" font-family="monospace, sans-serif" font-size="20" font-weight="900" text-anchor="middle">📞 0734-2551234</text>
-    
-    <g transform="translate(0, 50)" filter="url(#jShadow)">
-      <rect width="260" height="48" rx="24" fill="url(#jewelGold)"/>
-      <text x="130" y="30" fill="#1c0f03" font-family="system-ui, sans-serif" font-size="14" font-weight="900" text-anchor="middle" letter-spacing="0.5">
+    <!-- Button -->
+    <g transform="translate(0, 122)" filter="url(#jShadow)">
+      <rect width="190" height="42" rx="21" fill="url(#goldLinear)"/>
+      <text x="95" y="26" fill="#1c0f03" font-family="system-ui, sans-serif" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="0.5">
         VISIT SHOWROOM →
       </text>
     </g>

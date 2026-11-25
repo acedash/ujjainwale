@@ -1,84 +1,134 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320">
   <defs>
+    <!-- Background Gradients -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a0f1d"/>
-      <stop offset="50%" stop-color="#141c2e"/>
-      <stop offset="100%" stop-color="#2a1705"/>
+      <stop offset="0%" stop-color="#0c101d"/>
+      <stop offset="45%" stop-color="#181728"/>
+      <stop offset="100%" stop-color="#2a1608"/>
     </linearGradient>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f6d365"/>
-      <stop offset="100%" stop-color="#fda085"/>
+
+    <!-- Warm Golden Atmosphere Glow -->
+    <radialGradient id="templeGlow" cx="75%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"/>
+      <stop offset="45%" stop-color="#d97706" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="leftGlow" cx="20%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Gold Text Gradient -->
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
     </linearGradient>
+
+    <!-- Vibrant CTA Button -->
     <linearGradient id="btnGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#e65100"/>
-      <stop offset="100%" stop-color="#f57c00"/>
+      <stop offset="0%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
     </linearGradient>
-    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+
+    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.5"/>
     </filter>
   </defs>
 
-  <!-- Background -->
+  <!-- Deep Night Sky Background -->
   <rect width="1200" height="320" rx="20" fill="url(#bgGrad)"/>
-  
-  <!-- Subtle decorative circles -->
-  <circle cx="1150" cy="50" r="180" fill="#f59e0b" opacity="0.08" />
-  <circle cx="50" cy="300" r="140" fill="#f59e0b" opacity="0.05" />
+  <rect width="1200" height="320" rx="20" fill="url(#templeGlow)"/>
+  <rect width="1200" height="320" rx="20" fill="url(#leftGlow)"/>
 
-  <!-- Temple Silhouette Graphic (Right Side) -->
-  <g opacity="0.12" transform="translate(900, 20) scale(0.65)">
-    <path d="M 200 400 L 200 250 L 150 250 L 175 160 L 140 160 L 200 40 L 260 160 L 225 160 L 250 250 L 200 250 Z" fill="#fbbf24"/>
-    <path d="M 80 400 L 80 280 L 120 200 L 100 200 L 130 140 L 160 200 L 140 200 L 180 280 L 180 400 Z" fill="#fbbf24"/>
-    <path d="M 320 400 L 320 280 L 280 200 L 300 200 L 270 140 L 240 200 L 260 200 L 220 280 L 220 400 Z" fill="#fbbf24"/>
+  <!-- Subtle Outer Border -->
+  <rect x="1.5" y="1.5" width="1197" height="317" rx="19" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.25"/>
+
+  <!-- ============================================== -->
+  <!-- BIG MAJESTIC TEMPLE & ILLUMINATION ARTWORK     -->
+  <!-- ============================================== -->
+  <g transform="translate(680, 0)">
+    <!-- Aura Rays / Ring -->
+    <circle cx="280" cy="160" r="140" fill="none" stroke="#fbbf24" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="6 6"/>
+    <circle cx="280" cy="160" r="180" fill="none" stroke="#fbbf24" stroke-width="0.75" stroke-opacity="0.1"/>
+
+    <!-- Sacred Kalash & Flag on Main Spire -->
+    <path d="M 278 12 L 282 12 L 280 2 Z" fill="#fbbf24" filter="url(#glowFilter)"/>
+    <path d="M 280 8 Q 305 14 315 10 Q 300 22 280 20 Z" fill="#f97316"/>
+
+    <!-- Main Mahakal Grand Spire (Shikhara) -->
+    <path d="M 280 20 
+             Q 262 70 252 130 
+             Q 245 180 240 240 
+             L 240 320 
+             L 320 320 
+             L 320 240 
+             Q 315 180 308 130 
+             Q 298 70 280 20 Z" 
+          fill="#1e182e" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.4"/>
+
+    <!-- Shikhara Horizontal Urushringa Ribs -->
+    <path d="M 268 80 Q 280 85 292 80" stroke="#fbbf24" stroke-width="2" stroke-opacity="0.6" fill="none"/>
+    <path d="M 260 120 Q 280 126 300 120" stroke="#fbbf24" stroke-width="2" stroke-opacity="0.6" fill="none"/>
+    <path d="M 254 165 Q 280 172 306 165" stroke="#fbbf24" stroke-width="2.5" stroke-opacity="0.7" fill="none"/>
+    <path d="M 248 215 Q 280 224 312 215" stroke="#fbbf24" stroke-width="2.5" stroke-opacity="0.7" fill="none"/>
+    <path d="M 242 270 Q 280 280 318 270" stroke="#fbbf24" stroke-width="3" stroke-opacity="0.8" fill="none"/>
+
+    <!-- Spire Ambient Gold Highlights -->
+    <circle cx="280" cy="170" r="12" fill="#fbbf24" opacity="0.9" filter="url(#glowFilter)"/>
+
+    <!-- Left Flanking Temple Tower -->
+    <path d="M 160 110 Q 148 180 140 320 L 240 320 L 240 180 Q 220 150 160 110 Z" 
+          fill="#161224" stroke="#f59e0b" stroke-width="1.2" stroke-opacity="0.3"/>
+    <path d="M 160 100 L 160 110" stroke="#fbbf24" stroke-width="2" fill="none"/>
+    <path d="M 160 102 Q 178 106 185 103 Q 172 112 160 110 Z" fill="#f97316"/>
+    <path d="M 148 190 Q 180 196 215 190" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.5" fill="none"/>
+    <path d="M 144 250 Q 180 258 225 250" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.5" fill="none"/>
+
+    <!-- Right Flanking Temple Tower -->
+    <path d="M 400 110 Q 412 180 420 320 L 320 320 L 320 180 Q 340 150 400 110 Z" 
+          fill="#161224" stroke="#f59e0b" stroke-width="1.2" stroke-opacity="0.3"/>
+    <path d="M 400 100 L 400 110" stroke="#fbbf24" stroke-width="2" fill="none"/>
+    <path d="M 400 102 Q 418 106 425 103 Q 412 112 400 110 Z" fill="#f97316"/>
+    <path d="M 345 190 Q 380 196 412 190" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.5" fill="none"/>
+    <path d="M 335 250 Q 380 258 416 250" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.5" fill="none"/>
+
+    <!-- Base Gateway / Pillars Glow -->
+    <rect x="220" y="270" width="120" height="50" fill="#f59e0b" opacity="0.15" filter="url(#glowFilter)"/>
+    <rect x="255" y="260" width="50" height="60" rx="25" fill="#fef08a" opacity="0.4" filter="url(#glowFilter)"/>
   </g>
 
-  <!-- Left Icon Emblem -->
-  <g transform="translate(60, 50)">
-    <rect width="90" height="90" rx="18" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5" filter="url(#shadow)"/>
-    <text x="45" y="62" font-size="46" text-anchor="middle" dominant-baseline="central">🛕</text>
-  </g>
+  <!-- ============================================== -->
+  <!-- MINIMAL, BOLD, CLEAN CONTENT (NO CLUTTER)     -->
+  <!-- ============================================== -->
+  <g transform="translate(70, 75)">
+    <!-- Small Category Pill -->
+    <g transform="translate(0, 0)">
+      <rect width="130" height="28" rx="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.4"/>
+      <circle cx="16" cy="14" r="4" fill="#fbbf24"/>
+      <text x="74" y="19" fill="#fef08a" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1">UJJAIN STAY</text>
+    </g>
 
-  <!-- Badges Top Left -->
-  <g transform="translate(170, 50)">
-    <rect width="115" height="26" rx="6" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.2"/>
-    <text x="57" y="18" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1">AD • प्रायोजक</text>
-  </g>
-  <g transform="translate(295, 50)">
-    <rect width="210" height="26" rx="6" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.2"/>
-    <text x="105" y="18" fill="#34d399" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="middle">★ 4.9 (850+ Google Reviews)</text>
-  </g>
-
-  <!-- Main Headline -->
-  <text x="170" y="125" fill="#ffffff" font-family="system-ui, sans-serif" font-size="34" font-weight="900" letter-spacing="-0.5">
-    श्री महाकाल हेरिटेज होटल एवं धर्मशाला · उज्जैन
-  </text>
-
-  <!-- Subtitle / Highlights -->
-  <text x="170" y="170" fill="#fef08a" font-family="system-ui, sans-serif" font-size="17" font-weight="600">
-    महाकाल मंदिर से मात्र २०० मीटर दूरी पर • २४/७ एसी डीलक्स रूम्स • शुद्ध सात्विक भोजन • लिफ्ट सुविधा
-  </text>
-  <text x="170" y="200" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14" font-weight="400">
-    भस्म आरती दर्शन बुकिंग सहायता, वीआईपी दर्शन व मंगलनाथ कालसर्प पूजा मार्गदर्शन उपलब्ध।
-  </text>
-
-  <!-- Offer Tagline -->
-  <g transform="translate(170, 235)">
-    <rect width="320" height="34" rx="8" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-width="1" stroke-opacity="0.15"/>
-    <text x="160" y="22" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">
-      Special Pilgrim Rate: ₹999/- से शुरू
+    <!-- Big Bold Punchy Title -->
+    <text x="0" y="78" fill="url(#goldText)" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" letter-spacing="-0.5" filter="url(#softShadow)">
+      श्री महाकाल हेरिटेज होटल
     </text>
-  </g>
 
-  <!-- Right Call To Action Section -->
-  <g transform="translate(860, 90)">
-    <!-- Call Box -->
-    <text x="150" y="20" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5" text-anchor="middle">24x7 HELPLINE &amp; BOOKING</text>
-    <text x="150" y="55" fill="#fbbf24" font-family="monospace, sans-serif" font-size="24" font-weight="900" letter-spacing="0.5" text-anchor="middle">+91 98270 12345</text>
-    
-    <!-- CTA Button -->
-    <g transform="translate(10, 85)" filter="url(#shadow)">
-      <rect width="280" height="52" rx="26" fill="url(#btnGrad)"/>
-      <text x="140" y="32" fill="#ffffff" font-family="system-ui, sans-serif" font-size="15" font-weight="900" text-anchor="middle" letter-spacing="0.5">
+    <!-- Single Punchy Subtitle -->
+    <text x="0" y="118" fill="#e2e8f0" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="500" opacity="0.9">
+      महाकाल मंदिर से मात्र 200 मीटर • लग्जरी रूम्स एवं सात्विक भोजन
+    </text>
+
+    <!-- Clean Sleek CTA Button -->
+    <g transform="translate(0, 142)" filter="url(#softShadow)">
+      <rect width="210" height="48" rx="24" fill="url(#btnGrad)"/>
+      <text x="105" y="30" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="0.5">
         BOOK ROOM NOW →
       </text>
     </g>
