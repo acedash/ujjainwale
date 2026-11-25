@@ -14,21 +14,21 @@
     <!-- Hero Carousel Section -->
     @if($heroItems->isNotEmpty())
         @php 
-            $carouselItems = $heroItems->take(5); 
+            $carouselItems = $heroItems->take(6); 
             $carouselCount = $carouselItems->count();
         @endphp
-        <div class="max-w-7xl mx-auto px-6 md:px-10 mt-6 mb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mt-4 md:mt-6 mb-8 md:mb-12">
             <div x-data="{ 
                     activeSlide: 1,
                     totalSlides: {{ $carouselCount }},
                     autoPlay() {
                         setInterval(() => {
                             this.activeSlide = this.activeSlide === this.totalSlides ? 1 : this.activeSlide + 1;
-                        }, 5000);
+                        }, 6000);
                     }
                  }" 
                  x-init="autoPlay()"
-                 class="relative w-full h-auto md:h-[60vh] min-h-[500px] overflow-hidden rounded-3xl shadow-2xl group bg-midnight">
+                 class="relative w-full h-[580px] sm:h-[520px] md:h-[480px] lg:h-[520px] overflow-hidden rounded-3xl shadow-2xl group bg-slate-950 border border-slate-800/80">
                 
                 <!-- Slides -->
                 <div class="w-full h-full relative">
@@ -49,18 +49,23 @@
 
                 @if($carouselCount > 1)
                     <!-- Navigation Arrows -->
-                    <button @click="activeSlide = activeSlide === 1 ? totalSlides : activeSlide - 1" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 border border-white/20">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    <button @click="activeSlide = activeSlide === 1 ? totalSlides : activeSlide - 1" 
+                            aria-label="Previous Slide"
+                            class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 border border-white/20 shadow-lg">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                     </button>
-                    <button @click="activeSlide = activeSlide === totalSlides ? 1 : activeSlide + 1" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 border border-white/20">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <button @click="activeSlide = activeSlide === totalSlides ? 1 : activeSlide + 1" 
+                            aria-label="Next Slide"
+                            class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 border border-white/20 shadow-lg">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                     </button>
 
                     <!-- Indicators -->
-                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
+                    <div class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3 z-20 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
                         @for($i = 1; $i <= $carouselCount; $i++)
                             <button @click="activeSlide = {{ $i }}" 
-                                    :class="{'w-8 bg-city-accent': activeSlide === {{ $i }}, 'w-2 bg-white/50 hover:bg-white/80': activeSlide !== {{ $i }}}"
+                                    aria-label="Go to slide {{ $i }}"
+                                    :class="{'w-7 sm:w-8 bg-amber-400': activeSlide === {{ $i }}, 'w-2 bg-white/40 hover:bg-white/70': activeSlide !== {{ $i }}}"
                                     class="h-2 rounded-full transition-all duration-300"></button>
                         @endfor
                     </div>

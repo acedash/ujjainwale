@@ -13,44 +13,55 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // 1. Hero Carousel Items (Max 4 featured articles/headlines)
-        $featuredArticles = Article::with(['categories', 'author'])
+        // 1. Hero Carousel Items (A dynamic curated blend of top Blog articles + top Live News sources)
+        // A. Priority to explicitly featured items
+        $featuredArticles = Article::with(['categories', 'author', 'media'])
             ->published()
             ->where('is_featured', true)
             ->latest('published_at')
-            ->take(4)
+            ->take(3)
             ->get();
 
         $featuredExternal = ExternalHeadline::with(['categories', 'newsSource'])
             ->where('is_featured', true)
+            ->whereNotNull('thumbnail_url')
+            ->where('thumbnail_url', '!=', '')
             ->latest('published_at')
-            ->take(2)
+            ->take(3)
             ->get();
 
-        $heroItems = $featuredArticles->concat($featuredExternal)->sortByDesc('published_at')->take(4)->values();
+        // B. Ensure both Blog articles AND External news sources are represented
+        $latestBlogArticles = Article::with(['categories', 'author', 'media'])
+            ->published()
+            ->whereNotIn('id', $featuredArticles->pluck('id'))
+            ->latest('published_at')
+            ->take(max(0, 3 - $featuredArticles->count()))
+            ->get();
 
-        if ($heroItems->count() < 4) {
-            $existingArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
-            $existingExternalIds = $heroItems->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray();
+        $latestExternalNews = ExternalHeadline::with(['categories', 'newsSource'])
+            ->whereNotIn('id', $featuredExternal->pluck('id'))
+            ->whereNotNull('thumbnail_url')
+            ->where('thumbnail_url', '!=', '')
+            ->latest('published_at')
+            ->take(max(0, 3 - $featuredExternal->count()))
+            ->get();
 
-            $fillExternal = ExternalHeadline::with(['categories', 'newsSource'])
-                ->whereNotIn('id', $existingExternalIds)
-                ->whereNotNull('thumbnail_url')
-                ->latest('published_at')
-                ->take(4 - $heroItems->count())
-                ->get();
-            $heroItems = $heroItems->concat($fillExternal)->values();
+        // Merge: Blog Articles + External News sources
+        $blogItems = $featuredArticles->concat($latestBlogArticles);
+        $externalItems = $featuredExternal->concat($latestExternalNews);
 
-            if ($heroItems->count() < 4) {
-                $fillArticles = Article::with(['categories', 'author'])
-                    ->published()
-                    ->whereNotIn('id', $existingArticleIds)
-                    ->latest('published_at')
-                    ->take(4 - $heroItems->count())
-                    ->get();
-                $heroItems = $heroItems->concat($fillArticles)->values();
+        // Interleave to give an engaging carousel alternating between top live news and in-depth blog stories
+        $heroItems = collect();
+        $maxCount = max($blogItems->count(), $externalItems->count());
+        for ($i = 0; $i < $maxCount; $i++) {
+            if ($externalItems->has($i)) {
+                $heroItems->push($externalItems->get($i));
+            }
+            if ($blogItems->has($i)) {
+                $heroItems->push($blogItems->get($i));
             }
         }
+        $heroItems = $heroItems->take(6)->values();
 
         $usedArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
         $usedExternalIds = $heroItems->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray();
