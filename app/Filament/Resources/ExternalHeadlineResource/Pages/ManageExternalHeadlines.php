@@ -23,7 +23,11 @@ class ManageExternalHeadlines extends ManageRecords
                 ->modalHeading('Auto-Categorize Headlines')
                 ->modalDescription('Scan and categorize all headlines using Ujjain local news keywords (Mahakal, Dharma, City, Crime, Politics, Business, Weather, Sports).')
                 ->action(function () {
-                    $count = app(HeadlineCategorizerService::class)->categorizeAll();
+                    ini_set('max_execution_time', '300');
+                    if (function_exists('set_time_limit')) {
+                        @set_time_limit(300);
+                    }
+                    $count = app(HeadlineCategorizerService::class)->categorizeAll(onlyUncategorized: true);
                     Notification::make()
                         ->title('Categorization Complete')
                         ->body("Categorized {$count} headlines successfully.")

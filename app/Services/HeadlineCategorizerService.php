@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\ExternalHeadline;
+use Illuminate\Support\Facades\DB;
 
 class HeadlineCategorizerService
 {
@@ -69,6 +70,34 @@ class HeadlineCategorizerService
         ],
     ];
 
+    protected ?array $categoryMapCache = null;
+
+    /**
+     * Cache and return category ID map for defined categories.
+     *
+     * @return array<string, int> slug => id
+     */
+    public function getCategoryMap(): array
+    {
+        if ($this->categoryMapCache !== null) {
+            return $this->categoryMapCache;
+        }
+
+        $map = [];
+        foreach ($this->rules as $categoryName => $config) {
+            $category = Category::firstOrCreate(
+                ['slug' => $config['slug']],
+                [
+                    'name' => $categoryName,
+                    'type' => 'news',
+                ]
+            );
+            $map[$config['slug']] = $category->id;
+        }
+
+        return $this->categoryMapCache = $map;
+    }
+
     /**
      * Categorize a single external headline.
      *
@@ -76,20 +105,15 @@ class HeadlineCategorizerService
      */
     public function categorize(ExternalHeadline $headline): array
     {
+        $categoryMap = $this->getCategoryMap();
         $text = mb_strtolower($headline->title.' '.($headline->original_snippet ?? ''));
         $matchedCategoryIds = [];
 
-        foreach ($this->rules as $categoryName => $config) {
+        foreach ($this->rules as $config) {
+            $catId = $categoryMap[$config['slug']];
             foreach ($config['keywords'] as $keyword) {
                 if (mb_stripos($text, mb_strtolower($keyword)) !== false) {
-                    $category = Category::firstOrCreate(
-                        ['slug' => $config['slug']],
-                        [
-                            'name' => $categoryName,
-                            'type' => 'news',
-                        ]
-                    );
-                    $matchedCategoryIds[] = $category->id;
+                    $matchedCategoryIds[] = $catId;
                     break;
                 }
             }
@@ -103,26 +127,72 @@ class HeadlineCategorizerService
     }
 
     /**
-     * Categorize all uncategorized or all headlines.
+     * Categorize all uncategorized or all headlines in high-performance chunks.
      */
     public function categorizeAll(bool $onlyUncategorized = false): int
     {
-        $query = ExternalHeadline::query();
+        $categoryMap = $this->getCategoryMap();
+
+        $query = ExternalHeadline::query()->select(['id', 'title', 'original_snippet']);
 
         if ($onlyUncategorized) {
             $query->doesntHave('categories');
         }
 
-        $count = 0;
-        $query->chunk(100, function ($headlines) use (&$count) {
+        $totalCategorized = 0;
+
+        $query->chunk(500, function ($headlines) use ($categoryMap, &$totalCategorized) {
+            $headlineIds = $headlines->pluck('id')->all();
+
+            // Fetch any existing relations for this batch to prevent duplicates
+            $existingRelations = DB::table('category_external_headline')
+                ->whereIn('external_headline_id', $headlineIds)
+                ->get()
+                ->groupBy('external_headline_id')
+                ->map(fn ($group) => $group->pluck('category_id')->flip()->all())
+                ->all();
+
+            $pivotRows = [];
+            $categorizedInBatch = 0;
+
             foreach ($headlines as $headline) {
-                $matched = $this->categorize($headline);
-                if (! empty($matched)) {
-                    $count++;
+                $text = mb_strtolower($headline->title.' '.($headline->original_snippet ?? ''));
+                $hasMatch = false;
+                $existingCatMap = $existingRelations[$headline->id] ?? [];
+
+                foreach ($this->rules as $config) {
+                    $catId = $categoryMap[$config['slug']];
+
+                    // Skip if already linked
+                    if (isset($existingCatMap[$catId])) {
+                        continue;
+                    }
+
+                    foreach ($config['keywords'] as $keyword) {
+                        if (mb_stripos($text, mb_strtolower($keyword)) !== false) {
+                            $pivotRows[] = [
+                                'category_id' => $catId,
+                                'external_headline_id' => $headline->id,
+                            ];
+                            $existingCatMap[$catId] = true; // prevent duplicate within same item
+                            $hasMatch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if ($hasMatch) {
+                    $categorizedInBatch++;
                 }
             }
+
+            if (! empty($pivotRows)) {
+                DB::table('category_external_headline')->insert($pivotRows);
+            }
+
+            $totalCategorized += $categorizedInBatch;
         });
 
-        return $count;
+        return $totalCategorized;
     }
 }
