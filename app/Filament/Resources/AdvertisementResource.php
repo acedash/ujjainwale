@@ -88,11 +88,17 @@ class AdvertisementResource extends Resource
                 Forms\Components\Group::make()
                     ->schema([
                         Forms\Components\Section::make('Banner Image')
+                            ->description('Upload or provide image URL. For Billboard banners, recommended size is 1200x320px.')
                             ->schema([
                                 Forms\Components\SpatieMediaLibraryFileUpload::make('image')
                                     ->collection('image')
                                     ->image()
-                                    ->helperText('Optional image for banner, card, or skyscraper.'),
+                                    ->helperText('Upload banner image file (PNG, JPG, WebP).'),
+                                Forms\Components\TextInput::make('image_url')
+                                    ->label('Or Banner Image URL')
+                                    ->maxLength(1000)
+                                    ->placeholder('https://domain.com/banner.jpg')
+                                    ->helperText('Optional direct external image link if not uploading.'),
                             ]),
 
                         Forms\Components\Section::make('Publishing & Scheduling')

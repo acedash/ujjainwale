@@ -100,7 +100,7 @@
         <!-- 1. ADVERTISEMENT SECTION (विज्ञापन)           -->
         <!-- ============================================== -->
         @php
-            $billboardAd = isset($advertisements) ? $advertisements->get('billboard')?->first() : null;
+            $billboardAds = isset($advertisements) ? ($advertisements->get('billboard') ?? collect()) : collect();
             $leftAd = isset($advertisements) ? $advertisements->get('left_rail')?->first() : null;
             $rightAd = isset($advertisements) ? $advertisements->get('right_rail')?->first() : null;
             $sponsorCards = isset($advertisements) ? ($advertisements->get('sponsor_card') ?? collect()) : collect();
@@ -115,91 +115,221 @@
                 </span>
 
                 <div class="w-full space-y-6">
-                    <!-- Main Billboard Ad -->
-                    @if($billboardAd)
-                        @if($billboardAd->ad_code)
-                            <div class="w-full bg-white rounded-2xl p-4 border border-gray-200 shadow-sm overflow-hidden flex justify-center">
-                                {!! $billboardAd->ad_code !!}
+                    <!-- Main Billboard Ad (Full-Width Banner or Carousel) -->
+                    @if($billboardAds->isNotEmpty())
+                        @if($billboardAds->count() > 1)
+                            {{-- Multi-Banner Carousel --}}
+                            <div x-data="{
+                                activeSlide: 0,
+                                totalSlides: {{ $billboardAds->count() }},
+                                timer: null,
+                                start() {
+                                    this.timer = setInterval(() => {
+                                        this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
+                                    }, 6000);
+                                },
+                                stop() {
+                                    if (this.timer) clearInterval(this.timer);
+                                }
+                            }" 
+                            x-init="start()" 
+                            @mouseenter="stop()" 
+                            @mouseleave="start()" 
+                            class="relative w-full overflow-hidden rounded-2xl group/ad">
+                                <div class="relative w-full">
+                                    @foreach($billboardAds as $index => $billboardAd)
+                                        @php
+                                            $bImg = $billboardAd->getBannerImageUrl();
+                                        @endphp
+                                        <div x-show="activeSlide === {{ $index }}"
+                                             x-transition:enter="transition ease-out duration-500"
+                                             x-transition:enter-start="opacity-0 translate-x-4"
+                                             x-transition:enter-end="opacity-100 translate-x-0"
+                                             x-transition:leave="transition ease-in duration-300"
+                                             x-transition:leave-start="opacity-100"
+                                             x-transition:leave-end="opacity-0"
+                                             class="w-full">
+                                            @if($billboardAd->ad_code)
+                                                <div class="w-full bg-white rounded-2xl p-4 border border-gray-200 shadow-sm overflow-hidden flex justify-center">
+                                                    {!! $billboardAd->ad_code !!}
+                                                </div>
+                                            @elseif($bImg)
+                                                {{-- Big Full Banner Image --}}
+                                                <div class="relative w-full rounded-2xl overflow-hidden shadow-md border border-gray-200/90 bg-stone-950 group">
+                                                    <a href="{{ $billboardAd->cta_url ?: route('directory.register') }}" 
+                                                       {{ $billboardAd->cta_url ? 'target="_blank" rel="noopener noreferrer"' : '' }} 
+                                                       class="block w-full">
+                                                        <img src="{{ $bImg }}" 
+                                                             alt="{{ $billboardAd->title }}" 
+                                                             class="w-full h-auto max-h-[280px] sm:max-h-[320px] md:max-h-[380px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
+                                                             loading="lazy" 
+                                                             referrerpolicy="no-referrer">
+                                                    </a>
+                                                    <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider z-10 border border-white/20">
+                                                        {{ $billboardAd->badge_text ?: 'Ad · विज्ञापन' }}
+                                                    </span>
+                                                </div>
+                                            @else
+                                                {{-- Styled Text Billboard Card --}}
+                                                <div class="w-full bg-gradient-to-r from-stone-900 via-neutral-900 to-amber-950 text-white border border-amber-500/30 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                                                    <div class="absolute -right-10 -top-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                                                    <div class="absolute top-3 right-4">
+                                                        <span class="text-[9px] font-sans font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded">
+                                                            {{ $billboardAd->badge_text ?: 'Ad · विज्ञापन' }}
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="flex items-center gap-5 z-10 w-full lg:w-auto">
+                                                        @if($billboardAd->icon)
+                                                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-3xl md:text-4xl shadow-lg shrink-0 border border-amber-300">
+                                                                {{ $billboardAd->icon }}
+                                                            </div>
+                                                        @endif
+
+                                                        <div class="space-y-1">
+                                                            @if($billboardAd->subtitle)
+                                                                <div class="flex items-center gap-2 flex-wrap">
+                                                                    <span class="bg-amber-400 text-stone-950 text-[10px] font-sans font-black uppercase px-2 py-0.5 rounded tracking-wider">
+                                                                        {{ $billboardAd->subtitle }}
+                                                                    </span>
+                                                                </div>
+                                                            @endif
+                                                            <h3 class="font-display font-black text-xl md:text-2xl text-white tracking-tight">
+                                                                {{ $billboardAd->title }}
+                                                            </h3>
+                                                            @if($billboardAd->description)
+                                                                <p class="font-sans text-xs md:text-sm text-gray-300 max-w-xl font-light">
+                                                                    {{ $billboardAd->description }}
+                                                                </p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0 z-10 w-full lg:w-auto justify-end">
+                                                        @if($billboardAd->phone)
+                                                            <div class="text-right hidden sm:block pr-2">
+                                                                <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-sans">Helpline &amp; Booking</span>
+                                                                <span class="text-base font-bold text-amber-400 font-mono tracking-tight">{{ $billboardAd->phone }}</span>
+                                                            </div>
+                                                        @endif
+                                                        @if($billboardAd->cta_url && $billboardAd->cta_text)
+                                                            <a href="{{ $billboardAd->cta_url }}" class="w-full sm:w-auto text-center bg-city-accent hover:bg-yellow-300 text-ink font-black px-6 py-3 rounded-full border border-yellow-300 shadow-md transition-all text-xs tracking-wider uppercase font-sans hover:scale-105">
+                                                                {{ $billboardAd->cta_text }} &rarr;
+                                                            </a>
+                                                        @endif
+                                                        <a href="{{ route('directory.register') }}" class="w-full sm:w-auto text-center bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-full border border-white/20 transition-all text-xs tracking-wider uppercase font-sans">
+                                                            Advertise Here
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                {{-- Carousel Dots Navigation --}}
+                                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 bg-black/50 backdrop-blur-xs px-3 py-1.5 rounded-full border border-white/10">
+                                    @foreach($billboardAds as $index => $billboardAd)
+                                        <button @click="activeSlide = {{ $index }}" 
+                                                :class="activeSlide === {{ $index }} ? 'w-6 bg-city-accent' : 'w-2 bg-white/60 hover:bg-white'" 
+                                                class="h-2 rounded-full transition-all duration-300"
+                                                aria-label="Slide {{ $index + 1 }}"></button>
+                                    @endforeach
+                                </div>
                             </div>
                         @else
+                            {{-- Single Billboard Ad --}}
                             @php
-                                $bImg = $billboardAd->getFirstMediaUrl('image');
+                                $singleAd = $billboardAds->first();
+                                $bImg = $singleAd->getBannerImageUrl();
                             @endphp
-                            <div class="w-full bg-gradient-to-r from-stone-900 via-neutral-900 to-amber-950 text-white border border-amber-500/30 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden group">
-                                <div class="absolute -right-10 -top-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                                <div class="absolute top-3 right-4">
-                                    <span class="text-[9px] font-sans font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded">
-                                        {{ $billboardAd->badge_text ?: 'Ad · विज्ञापन' }}
+                            @if($singleAd->ad_code)
+                                <div class="w-full bg-white rounded-2xl p-4 border border-gray-200 shadow-sm overflow-hidden flex justify-center">
+                                    {!! $singleAd->ad_code !!}
+                                </div>
+                            @elseif($bImg)
+                                {{-- Big Full Banner Image --}}
+                                <div class="relative w-full rounded-2xl overflow-hidden shadow-md border border-gray-200/90 bg-stone-950 group">
+                                    <a href="{{ $singleAd->cta_url ?: route('directory.register') }}" 
+                                       {{ $singleAd->cta_url ? 'target="_blank" rel="noopener noreferrer"' : '' }} 
+                                       class="block w-full">
+                                        <img src="{{ $bImg }}" 
+                                             alt="{{ $singleAd->title }}" 
+                                             class="w-full h-auto max-h-[280px] sm:max-h-[320px] md:max-h-[380px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
+                                             loading="lazy" 
+                                             referrerpolicy="no-referrer">
+                                    </a>
+                                    <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider z-10 border border-white/20">
+                                        {{ $singleAd->badge_text ?: 'Ad · विज्ञापन' }}
                                     </span>
                                 </div>
+                            @else
+                                {{-- Styled Text Billboard Card --}}
+                                <div class="w-full bg-gradient-to-r from-stone-900 via-neutral-900 to-amber-950 text-white border border-amber-500/30 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                                    <div class="absolute -right-10 -top-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                                    <div class="absolute top-3 right-4">
+                                        <span class="text-[9px] font-sans font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded">
+                                            {{ $singleAd->badge_text ?: 'Ad · विज्ञापन' }}
+                                        </span>
+                                    </div>
 
-                                <div class="flex items-center gap-5 z-10 w-full lg:w-auto">
-                                    @if($bImg)
-                                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shrink-0 border border-amber-300 shadow-lg bg-stone-800">
-                                            <img src="{{ $bImg }}" alt="{{ $billboardAd->title }}" class="w-full h-full object-cover">
-                                        </div>
-                                    @elseif($billboardAd->icon)
-                                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-3xl md:text-4xl shadow-lg shrink-0 border border-amber-300">
-                                            {{ $billboardAd->icon }}
-                                        </div>
-                                    @endif
-
-                                    <div class="space-y-1">
-                                        @if($billboardAd->subtitle)
-                                            <div class="flex items-center gap-2 flex-wrap">
-                                                <span class="bg-amber-400 text-stone-950 text-[10px] font-sans font-black uppercase px-2 py-0.5 rounded tracking-wider">
-                                                    {{ $billboardAd->subtitle }}
-                                                </span>
+                                    <div class="flex items-center gap-5 z-10 w-full lg:w-auto">
+                                        @if($singleAd->icon)
+                                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-3xl md:text-4xl shadow-lg shrink-0 border border-amber-300">
+                                                {{ $singleAd->icon }}
                                             </div>
                                         @endif
-                                        <h3 class="font-display font-black text-xl md:text-2xl text-white tracking-tight">
-                                            {{ $billboardAd->title }}
-                                        </h3>
-                                        @if($billboardAd->description)
-                                            <p class="font-sans text-xs md:text-sm text-gray-300 max-w-xl font-light">
-                                                {{ $billboardAd->description }}
-                                            </p>
+
+                                        <div class="space-y-1">
+                                            @if($singleAd->subtitle)
+                                                <div class="flex items-center gap-2 flex-wrap">
+                                                    <span class="bg-amber-400 text-stone-950 text-[10px] font-sans font-black uppercase px-2 py-0.5 rounded tracking-wider">
+                                                        {{ $singleAd->subtitle }}
+                                                    </span>
+                                                </div>
+                                            @endif
+                                            <h3 class="font-display font-black text-xl md:text-2xl text-white tracking-tight">
+                                                {{ $singleAd->title }}
+                                            </h3>
+                                            @if($singleAd->description)
+                                                <p class="font-sans text-xs md:text-sm text-gray-300 max-w-xl font-light">
+                                                    {{ $singleAd->description }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0 z-10 w-full lg:w-auto justify-end">
+                                        @if($singleAd->phone)
+                                            <div class="text-right hidden sm:block pr-2">
+                                                <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-sans">Helpline &amp; Booking</span>
+                                                <span class="text-base font-bold text-amber-400 font-mono tracking-tight">{{ $singleAd->phone }}</span>
+                                            </div>
                                         @endif
+                                        @if($singleAd->cta_url && $singleAd->cta_text)
+                                            <a href="{{ $singleAd->cta_url }}" class="w-full sm:w-auto text-center bg-city-accent hover:bg-yellow-300 text-ink font-black px-6 py-3 rounded-full border border-yellow-300 shadow-md transition-all text-xs tracking-wider uppercase font-sans hover:scale-105">
+                                                {{ $singleAd->cta_text }} &rarr;
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('directory.register') }}" class="w-full sm:w-auto text-center bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-full border border-white/20 transition-all text-xs tracking-wider uppercase font-sans">
+                                            Advertise Here
+                                        </a>
                                     </div>
                                 </div>
-
-                                <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0 z-10 w-full lg:w-auto justify-end">
-                                    @if($billboardAd->phone)
-                                        <div class="text-right hidden sm:block pr-2">
-                                            <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-sans">Helpline &amp; Booking</span>
-                                            <span class="text-base font-bold text-amber-400 font-mono tracking-tight">{{ $billboardAd->phone }}</span>
-                                        </div>
-                                    @endif
-                                    @if($billboardAd->cta_url && $billboardAd->cta_text)
-                                        <a href="{{ $billboardAd->cta_url }}" class="w-full sm:w-auto text-center bg-city-accent hover:bg-yellow-300 text-ink font-black px-6 py-3 rounded-full border border-yellow-300 shadow-md transition-all text-xs tracking-wider uppercase font-sans hover:scale-105">
-                                            {{ $billboardAd->cta_text }} &rarr;
-                                        </a>
-                                    @endif
-                                    <a href="{{ route('directory.register') }}" class="w-full sm:w-auto text-center bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-full border border-white/20 transition-all text-xs tracking-wider uppercase font-sans">
-                                        Advertise Here
-                                    </a>
-                                </div>
-                            </div>
+                            @endif
                         @endif
                     @else
-                        <!-- Default Billboard Fallback if no billboard ad active in Admin -->
-                        <div class="w-full bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-amber-200/80 rounded-2xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
-                            <div class="space-y-1.5 text-center md:text-left z-10">
-                                <span class="inline-flex items-center gap-2 bg-white/80 border border-amber-200 text-amber-900 px-3 py-1 rounded-full text-xs font-sans font-bold uppercase tracking-wider mb-1">
-                                    Featured Partner
-                                </span>
-                                <h3 class="font-display font-black text-2xl md:text-3xl text-ink tracking-tight">
-                                    Grow Your Business Across Ujjain
-                                </h3>
-                                <p class="font-sans text-sm md:text-base text-gray-600 max-w-2xl font-light">
-                                    Connect your brand with over 50,000+ local readers, pilgrims, and residents daily. Manage all ad banners directly from the staff panel.
-                                </p>
-                            </div>
-                            <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0 z-10">
-                                <a href="{{ route('directory.register') }}" class="w-full sm:w-auto text-center bg-city-accent hover:bg-yellow-300 text-ink font-black px-6 py-3 rounded-full border border-yellow-300 shadow-sm transition-all text-xs tracking-wider uppercase font-sans">
-                                    Book Ad Space &rarr;
-                                </a>
-                            </div>
+                        <!-- Full-Banner Fallback if no billboard ad active in Admin -->
+                        <div class="relative w-full rounded-2xl overflow-hidden shadow-md border border-gray-200/90 bg-stone-950 group">
+                            <a href="{{ route('directory.register') }}" class="block w-full">
+                                <img src="{{ asset('images/ads/banner-advertise.svg') }}" 
+                                     alt="Advertise on UjjainWale - 50,000+ Daily Readers" 
+                                     class="w-full h-auto max-h-[280px] sm:max-h-[320px] md:max-h-[380px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
+                                     loading="lazy">
+                            </a>
+                            <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider z-10 border border-white/20">
+                                Featured Partner
+                            </span>
                         </div>
                     @endif
 
@@ -209,7 +339,7 @@
                             <!-- Left Advertisement -->
                             @if($leftAd)
                                 @php
-                                    $lImg = $leftAd->getFirstMediaUrl('image');
+                                    $lImg = $leftAd->getBannerImageUrl();
                                 @endphp
                                 <div class="bg-gradient-to-br from-white via-amber-50/40 to-yellow-50/60 rounded-3xl border-2 border-amber-300/90 shadow-md p-6 flex flex-col justify-between relative overflow-hidden group hover:shadow-xl hover:border-amber-400 transition-all">
                                     <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-amber-200/40 rounded-full blur-2xl pointer-events-none"></div>
@@ -273,7 +403,7 @@
                             <!-- Right Advertisement -->
                             @if($rightAd)
                                 @php
-                                    $rImg = $rightAd->getFirstMediaUrl('image');
+                                    $rImg = $rightAd->getBannerImageUrl();
                                 @endphp
                                 <div class="bg-gradient-to-br from-white via-orange-50/40 to-amber-50/60 rounded-3xl border-2 border-amber-300/90 shadow-md p-6 flex flex-col justify-between relative overflow-hidden group hover:shadow-xl hover:border-amber-400 transition-all">
                                     <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-orange-200/40 rounded-full blur-2xl pointer-events-none"></div>
@@ -341,7 +471,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ min($sponsorCards->count(), 2) }} gap-4">
                             @foreach($sponsorCards as $sc)
                                 @php
-                                    $scImg = $sc->getFirstMediaUrl('image');
+                                    $scImg = $sc->getBannerImageUrl();
                                 @endphp
                                 @if($sc->ad_code)
                                     <div class="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center justify-center overflow-hidden">
@@ -525,54 +655,69 @@
                 </div>
             @else
                 @php
-                    $inFeedImg = $inFeedAd->getFirstMediaUrl('image');
+                    $inFeedImg = $inFeedAd->getBannerImageUrl();
                 @endphp
-                <div class="w-full bg-gradient-to-r from-amber-50 via-yellow-50/70 to-orange-50/60 border-2 border-amber-300/90 rounded-3xl p-6 md:p-8 shadow-md flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden group">
-                    <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-yellow-200/50 rounded-full blur-2xl pointer-events-none"></div>
+                @if($inFeedImg)
+                    {{-- Big In-Feed Banner Image --}}
+                    <div class="relative w-full rounded-2xl overflow-hidden shadow-md border border-gray-200/90 bg-stone-950 group">
+                        <a href="{{ $inFeedAd->cta_url ?: route('directory.register') }}" 
+                           {{ $inFeedAd->cta_url ? 'target="_blank" rel="noopener noreferrer"' : '' }} 
+                           class="block w-full">
+                            <img src="{{ $inFeedImg }}" 
+                                 alt="{{ $inFeedAd->title }}" 
+                                 class="w-full h-auto max-h-[240px] sm:max-h-[280px] md:max-h-[300px] object-cover md:object-contain mx-auto group-hover:opacity-95 transition-all duration-300" 
+                                 loading="lazy" 
+                                 referrerpolicy="no-referrer">
+                        </a>
+                        <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider z-10 border border-white/20">
+                            {{ $inFeedAd->badge_text ?: 'Special Sponsor · प्रायोजक' }}
+                        </span>
+                    </div>
+                @else
+                    {{-- Styled Text In-Feed Card --}}
+                    <div class="w-full bg-gradient-to-r from-amber-50 via-yellow-50/70 to-orange-50/60 border-2 border-amber-300/90 rounded-3xl p-6 md:p-8 shadow-md flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                        <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-yellow-200/50 rounded-full blur-2xl pointer-events-none"></div>
 
-                    <div class="flex items-center gap-5 z-10 w-full lg:w-auto">
-                        @if($inFeedImg)
-                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shrink-0 border-2 border-amber-300 shadow-md bg-white">
-                                <img src="{{ $inFeedImg }}" alt="{{ $inFeedAd->title }}" class="w-full h-full object-cover">
-                            </div>
-                        @elseif($inFeedAd->icon)
-                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-3xl md:text-4xl flex items-center justify-center shrink-0 shadow-md border-2 border-amber-300">
-                                {{ $inFeedAd->icon }}
-                            </div>
-                        @endif
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                <span class="text-[10px] font-sans font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-3 py-0.5 rounded-full border border-amber-300">
-                                    {{ $inFeedAd->badge_text ?: 'Special Sponsor · प्रायोजक' }}
-                                </span>
-                                @if($inFeedAd->subtitle)
-                                    <span class="text-xs text-amber-800 font-sans font-bold bg-white/80 px-2.5 py-0.5 rounded-full border border-amber-200">{{ $inFeedAd->subtitle }}</span>
+                        <div class="flex items-center gap-5 z-10 w-full lg:w-auto">
+                            @if($inFeedAd->icon)
+                                <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-3xl md:text-4xl flex items-center justify-center shrink-0 shadow-md border-2 border-amber-300">
+                                    {{ $inFeedAd->icon }}
+                                </div>
+                            @endif
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                    <span class="text-[10px] font-sans font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-3 py-0.5 rounded-full border border-amber-300">
+                                        {{ $inFeedAd->badge_text ?: 'Special Sponsor · प्रायोजक' }}
+                                    </span>
+                                    @if($inFeedAd->subtitle)
+                                        <span class="text-xs text-amber-800 font-sans font-bold bg-white/80 px-2.5 py-0.5 rounded-full border border-amber-200">{{ $inFeedAd->subtitle }}</span>
+                                    @endif
+                                </div>
+                                <h3 class="font-display font-black text-xl md:text-2xl text-ink leading-tight">
+                                    {{ $inFeedAd->title }}
+                                </h3>
+                                @if($inFeedAd->description)
+                                    <p class="text-xs md:text-sm text-gray-700 font-normal leading-relaxed max-w-2xl">
+                                        {{ $inFeedAd->description }}
+                                    </p>
                                 @endif
                             </div>
-                            <h3 class="font-display font-black text-xl md:text-2xl text-ink leading-tight">
-                                {{ $inFeedAd->title }}
-                            </h3>
-                            @if($inFeedAd->description)
-                                <p class="text-xs md:text-sm text-gray-700 font-normal leading-relaxed max-w-2xl">
-                                    {{ $inFeedAd->description }}
-                                </p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0 z-10 w-full lg:w-auto justify-end">
+                            @if($inFeedAd->phone)
+                                <div class="text-right hidden sm:block pr-2">
+                                    <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-sans">Helpline</span>
+                                    <span class="text-sm font-bold text-ink font-mono tracking-tight">{{ $inFeedAd->phone }}</span>
+                                </div>
+                            @endif
+                            @if($inFeedAd->cta_url && $inFeedAd->cta_text)
+                                <a href="{{ $inFeedAd->cta_url }}" class="w-full sm:w-auto text-center bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-sans font-black text-xs md:text-sm uppercase tracking-wider px-7 py-3.5 rounded-full transition-all shadow-md hover:shadow-lg hover:scale-105">
+                                    {{ $inFeedAd->cta_text }} &rarr;
+                                </a>
                             @endif
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0 z-10 w-full lg:w-auto justify-end">
-                        @if($inFeedAd->phone)
-                            <div class="text-right hidden sm:block pr-2">
-                                <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-sans">Helpline</span>
-                                <span class="text-sm font-bold text-ink font-mono tracking-tight">{{ $inFeedAd->phone }}</span>
-                            </div>
-                        @endif
-                        @if($inFeedAd->cta_url && $inFeedAd->cta_text)
-                            <a href="{{ $inFeedAd->cta_url }}" class="w-full sm:w-auto text-center bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-sans font-black text-xs md:text-sm uppercase tracking-wider px-7 py-3.5 rounded-full transition-all shadow-md hover:shadow-lg hover:scale-105">
-                                {{ $inFeedAd->cta_text }} &rarr;
-                            </a>
-                        @endif
-                    </div>
-                </div>
+                @endif
             @endif
         @endif
 

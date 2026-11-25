@@ -54,6 +54,29 @@ class AdvertisementTest extends TestCase
         $response->assertSee('Vedic Puja Darshan Guide');
     }
 
+    public function test_homepage_displays_billboard_and_in_feed_full_banner_images(): void
+    {
+        Advertisement::factory()->create([
+            'title' => 'Big Billboard Banner Ad',
+            'placement' => 'billboard',
+            'image_url' => 'https://example.com/banner-billboard.jpg',
+            'is_active' => true,
+        ]);
+
+        Advertisement::factory()->create([
+            'title' => 'In-Feed Banner Leaderboard Ad',
+            'placement' => 'in_feed',
+            'image_url' => 'https://example.com/banner-in-feed.jpg',
+            'is_active' => true,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('https://example.com/banner-billboard.jpg');
+        $response->assertSee('https://example.com/banner-in-feed.jpg');
+    }
+
     public function test_homepage_does_not_display_inactive_advertisements(): void
     {
         Advertisement::factory()->create([

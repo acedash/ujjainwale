@@ -31,6 +31,7 @@ class Advertisement extends Model implements HasMedia
         'cta_url',
         'phone',
         'icon',
+        'image_url',
         'ad_code',
         'is_active',
         'order',
@@ -48,6 +49,17 @@ class Advertisement extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('image')->singleFile();
+    }
+
+    public function getBannerImageUrl(): ?string
+    {
+        $mediaUrl = $this->getFirstMediaUrl('image');
+
+        if ($mediaUrl) {
+            return $mediaUrl;
+        }
+
+        return $this->image_url ?: null;
     }
 
     public function scopeActive(Builder $query): Builder
