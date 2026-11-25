@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Advertisement;
 use App\Models\Article;
+use App\Models\Business;
 use App\Models\Category;
+use App\Models\ExternalHeadline;
+use App\Models\Neighborhood;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        // 1. Hero Carousel Items (Max 4 featured articles/headlines)
         $featuredArticles = Article::with(['categories', 'author'])
             ->published()
             ->where('is_featured', true)
@@ -16,101 +21,85 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        $featuredExternal = \App\Models\ExternalHeadline::with(['categories', 'newsSource'])
+        $featuredExternal = ExternalHeadline::with(['categories', 'newsSource'])
             ->where('is_featured', true)
             ->latest('published_at')
-            ->take(1) // Cap external to 1 in Hero
+            ->take(1)
             ->get();
-            
-        $featuredItems = $featuredArticles->concat($featuredExternal)->sortByDesc('published_at')->take(4)->values();
 
-        $remainingSlots = 4 - $featuredItems->count();
-        
-        $heroItems = collect($featuredItems);
+        $heroItems = $featuredArticles->concat($featuredExternal)->sortByDesc('published_at')->take(4)->values();
 
-        if ($remainingSlots > 0) {
-            $featuredArticleIds = $featuredItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
-            $featuredExternalIds = $featuredItems->whereInstanceOf(\App\Models\ExternalHeadline::class)->pluck('id')->toArray();
-
-            $latestArticles = Article::with(['categories', 'author'])
+        if ($heroItems->count() < 4) {
+            $existingArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
+            $fillArticles = Article::with(['categories', 'author'])
                 ->published()
-                ->whereNotIn('id', $featuredArticleIds)
+                ->whereNotIn('id', $existingArticleIds)
                 ->latest('published_at')
-                ->take($remainingSlots)
+                ->take(4 - $heroItems->count())
                 ->get();
-
-            // Allow external headlines to fill any remaining slots if internal articles are missing
-            $latestExternal = \App\Models\ExternalHeadline::with(['categories', 'newsSource'])
-                ->whereNotIn('id', $featuredExternalIds)
-                ->latest('published_at')
-                ->take($remainingSlots)
-                ->get();
-
-            $latestItems = $latestArticles->concat($latestExternal)->sortByDesc('published_at')->take($remainingSlots)->values();
-            $heroItems = $heroItems->concat($latestItems);
+            $heroItems = $heroItems->concat($fillArticles)->values();
         }
-        
-        $heroArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
-        $heroExternalIds = $heroItems->whereInstanceOf(\App\Models\ExternalHeadline::class)->pluck('id')->toArray();
 
-        // Secondary column items (3 slots)
-        $secondaryArticles = Article::with(['categories', 'author'])
+        $usedArticleIds = $heroItems->whereInstanceOf(Article::class)->pluck('id')->toArray();
+        $usedExternalIds = $heroItems->whereInstanceOf(ExternalHeadline::class)->pluck('id')->toArray();
+
+        // 2. Breaking News (Curated top 4 urgent/latest stories, strictly not all news)
+        $breakingNews = Article::with(['categories', 'author'])
             ->published()
-            ->whereNotIn('id', $heroArticleIds)
+            ->whereNotIn('id', $usedArticleIds)
             ->latest('published_at')
-            ->take(3)
+            ->take(4)
             ->get();
 
-        $secondaryExternal = \App\Models\ExternalHeadline::with(['categories', 'newsSource'])
-            ->whereNotIn('id', $heroExternalIds)
-            ->latest('published_at')
-            ->take(3) 
-            ->get();
+        $usedArticleIds = array_merge($usedArticleIds, $breakingNews->pluck('id')->toArray());
 
-        $secondaryItems = $secondaryArticles->concat($secondaryExternal)->sortByDesc('published_at')->take(3)->values();
-
-        $excludeArticleIds = collect($heroArticleIds)->merge($secondaryItems->whereInstanceOf(Article::class)->pluck('id'))->unique()->toArray();
-        $excludeExternalIds = collect($heroExternalIds)->merge($secondaryItems->whereInstanceOf(\App\Models\ExternalHeadline::class)->pluck('id'))->unique()->toArray();
-
-        // Get categories that have articles or external headlines
+        // 3. Category 1, Category 2, Category 3 (Curated top 3 editorial categories)
         $categories = Category::whereIn('type', ['news', 'both'])
-            ->with(['articles' => function ($query) use ($excludeArticleIds) {
+            ->whereNotIn('slug', ['makhapashhatha', 'vashashhasahatayahatha-lghakathae'])
+            ->with(['articles' => function ($query) use ($usedArticleIds) {
                 $query->published()
-                      ->whereNotIn('articles.id', $excludeArticleIds)
-                      ->latest('published_at')
-                      ->limit(4)
-                      ->with('categories', 'author');
-            }, 'externalHeadlines' => function ($query) use ($excludeExternalIds) {
-                $query->whereNotIn('external_headlines.id', $excludeExternalIds)
-                      ->latest('published_at')
-                      ->limit(4)
-                      ->with('categories', 'newsSource');
+                    ->whereNotIn('articles.id', $usedArticleIds)
+                    ->latest('published_at')
+                    ->limit(4)
+                    ->with(['categories', 'author']);
             }])
             ->get()
-            ->map(function ($cat) {
-                // Ensure balanced categories if needed, for now just sort and take 4
-                $cat->mixed_items = $cat->articles->concat($cat->externalHeadlines)
-                    ->sortByDesc('published_at')
-                    ->take(4)
-                    ->values();
-                return $cat;
-            })
-            ->filter(fn ($cat) => $cat->mixed_items->count() > 0);
+            ->filter(fn ($cat) => $cat->articles->count() >= 2)
+            ->sortByDesc(fn ($cat) => $cat->articles->count())
+            ->values();
 
-        $neighborhoods = \App\Models\Neighborhood::orderBy('name')->get();
+        $category1 = $categories->get(0);
+        $category2 = $categories->get(1);
+        $category3 = $categories->get(2);
 
-        $featuredBusinesses = \App\Models\Business::where('is_featured', true)
+        // 4. Yellow Pages / Local Businesses Showcase
+        $featuredBusinesses = Business::with(['categories', 'neighborhoods'])
+            ->where('status', '!=', 'pending_review')
             ->latest()
             ->take(4)
             ->get();
 
-        // Used by Trending Elsewhere section (which is explicitly external)
-        $externalHeadlines = \App\Models\ExternalHeadline::with('newsSource')
-            ->whereNotIn('id', $excludeExternalIds)
-            ->latest('published_at')
-            ->take(8)
-            ->get();
+        // Top ticker & neighborhoods
+        $neighborhoods = Neighborhood::orderBy('name')->get();
+        $externalHeadlines = ExternalHeadline::with('newsSource')->latest('published_at')->take(8)->get();
 
-        return view('welcome', compact('heroItems', 'secondaryItems', 'categories', 'neighborhoods', 'featuredBusinesses', 'externalHeadlines'));
+        // 5. Admin-managed advertisements
+        $advertisements = Advertisement::with('media')
+            ->active()
+            ->orderBy('order')
+            ->get()
+            ->groupBy('placement');
+
+        return view('welcome', compact(
+            'heroItems',
+            'breakingNews',
+            'category1',
+            'category2',
+            'category3',
+            'featuredBusinesses',
+            'neighborhoods',
+            'externalHeadlines',
+            'advertisements'
+        ));
     }
 }
