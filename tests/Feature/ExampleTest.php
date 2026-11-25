@@ -17,5 +17,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+        $response->assertSee('<title>Ujjain, Ujjain Simhasth 2028, Ujjain City</title>', false);
+        $response->assertDontSee('<title>Laravel</title>', false);
     }
 }

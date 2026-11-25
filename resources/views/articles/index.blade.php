@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Blog">
     <!-- Header -->
     <div class="bg-paper border-b border-newsprint py-12 md:py-16 px-6">
         <div class="max-w-7xl mx-auto text-center">

@@ -5,7 +5,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'City Magazine') }}</title>
+        @php
+            $defaultSiteTitle = 'Ujjain, Ujjain Simhasth 2028, Ujjain City';
+            $pageTitle = !empty($title) ? $title . ' | ' . $defaultSiteTitle : $defaultSiteTitle;
+            $metaDesc = $description ?? 'Ujjain, Ujjain Simhasth 2028, Ujjain City - Latest Local News, Simhasth 2028 Updates, Mahakal Darshan Guide, Culture & Local Business Directory.';
+            $metaImage = $image ?? asset('images/ujjain-wale.jpeg');
+        @endphp
+
+        <title>{{ $pageTitle }}</title>
+        <meta name="description" content="{{ $metaDesc }}">
+
+        <!-- Open Graph / WhatsApp / Facebook Preview -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="{{ $pageTitle }}">
+        <meta property="og:description" content="{{ $metaDesc }}">
+        <meta property="og:image" content="{{ $metaImage }}">
+        <meta property="og:site_name" content="Ujjain, Ujjain Simhasth 2028, Ujjain City">
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $pageTitle }}">
+        <meta name="twitter:description" content="{{ $metaDesc }}">
+        <meta name="twitter:image" content="{{ $metaImage }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

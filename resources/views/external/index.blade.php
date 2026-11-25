@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Trending News">
     <div class="bg-paper border-b border-newsprint py-12 px-6">
         <div class="max-w-7xl mx-auto text-center">
             <span class="text-city-accent font-sans font-bold text-sm tracking-wider uppercase mb-2 block">Aggregated</span>

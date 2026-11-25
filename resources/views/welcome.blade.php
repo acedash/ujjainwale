@@ -590,9 +590,9 @@
         @endif
 
         <!-- ============================================== -->
-        <!-- 6. YELLOW PAGES LINK & SHOWCASE (DIRECTORIES) -->
+        <!-- 6. LOCAL BUSINESS DIRECTORY SHOWCASE         -->
         <!-- ============================================== -->
-        <section aria-label="Yellow Pages Directory" class="bg-gradient-to-br from-amber-50 via-yellow-100/50 to-amber-100/60 rounded-3xl p-8 md:p-12 border-2 border-yellow-300/80 shadow-lg relative overflow-hidden">
+        <section aria-label="Business Directory" class="bg-gradient-to-br from-amber-50 via-yellow-100/50 to-amber-100/60 rounded-3xl p-8 md:p-12 border-2 border-yellow-300/80 shadow-lg relative overflow-hidden">
             <!-- Decorative Background Watermark -->
             <div class="absolute -right-12 -bottom-12 opacity-10 pointer-events-none select-none font-display font-black text-9xl text-amber-900 uppercase">
                 Directory
@@ -600,7 +600,7 @@
 
             <div class="max-w-4xl mb-10 relative z-10">
                 <span class="inline-flex items-center gap-2 bg-city-accent border border-yellow-400 text-ink px-4 py-1.5 rounded-full text-xs font-sans font-black tracking-widest uppercase mb-3 shadow-sm">
-                    <span>★</span> Ujjain Yellow Pages &middot; स्थानीय डायरेक्टरी
+                    <span>★</span> Ujjain Business Directory &middot; स्थानीय डायरेक्टरी
                 </span>
                 <h2 class="font-display font-black text-3xl md:text-5xl text-ink tracking-tight uppercase leading-none mb-3">
                     Discover Local Businesses &amp; Services
@@ -672,13 +672,13 @@
                     </div>
                     <div>
                         <h4 class="font-sans font-bold text-sm text-ink">Own a business or service in Ujjain?</h4>
-                        <p class="font-sans text-xs text-gray-600">List your shop, clinic, or service in the official Yellow Pages directory.</p>
+                        <p class="font-sans text-xs text-gray-600">List your shop, clinic, or service in the verified Ujjain city directory.</p>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
                     <a href="{{ route('directory') }}" class="w-full sm:w-auto text-center bg-ink hover:bg-gray-800 text-white font-black px-6 py-3 rounded-full shadow-sm transition-all text-xs tracking-wider uppercase font-sans">
-                        Open Yellow Pages Directory &rarr;
+                        Browse All Businesses &rarr;
                     </a>
                     <a href="{{ route('directory.register') }}" class="w-full sm:w-auto text-center bg-city-accent hover:bg-yellow-300 text-ink font-black px-6 py-3 rounded-full border border-yellow-400 shadow-sm transition-all text-xs tracking-wider uppercase font-sans hover:shadow">
                         + List Business Free

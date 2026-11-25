@@ -1,4 +1,8 @@
-<x-app-layout>
+@php
+    $articleFeaturedImage = $article->getFirstMediaUrl('featured_image') ?: $article->getFirstMediaUrl('cover');
+@endphp
+
+<x-app-layout :title="$article->title" :description="$article->dek" :image="$articleFeaturedImage">
     <article class="max-w-5xl mx-auto px-6 py-12 md:py-16">
         <header class="mb-10 max-w-3xl">
             @if($article->categories->count())
