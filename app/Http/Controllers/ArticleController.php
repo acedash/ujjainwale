@@ -29,7 +29,7 @@ class ArticleController extends Controller
         }
 
         $articles = $query->paginate(12)->withQueryString();
-        $categories = Category::has('articles')->orderBy('name')->get();
+        $categories = Category::has('articles')->whereNotIn('slug', ['makhapashhatha'])->orderBy('name')->get();
 
         return view('articles.index', compact('articles', 'categories'));
     }

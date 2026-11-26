@@ -4,15 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Models\Article;
+use App\Services\ArticleCategorizerService;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\SpatieTagsInput;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 class ArticleResource extends Resource
@@ -61,7 +64,7 @@ class ArticleResource extends Resource
                                         'undo',
                                     ]),
                             ]),
-                            
+
                         Forms\Components\Section::make('Media')
                             ->schema([
                                 Forms\Components\SpatieMediaLibraryFileUpload::make('featured_image')
@@ -73,7 +76,7 @@ class ArticleResource extends Resource
                                     ->maxLength(255)
                                     ->columnSpanFull(),
                             ]),
-                            
+
                         Forms\Components\Section::make('SEO')
                             ->schema([
                                 Forms\Components\TextInput::make('slug')
@@ -126,13 +129,14 @@ class ArticleResource extends Resource
                                     ->helperText('If enabled, this article may be prioritized in the homepage hero section.'),
                                 Forms\Components\Select::make('author_id')
                                     ->label('Author')
-                                    ->relationship('author', 'name', function (\Illuminate\Database\Eloquent\Builder $query) {
+                                    ->relationship('author', 'name', function (Builder $query) {
                                         if (auth()->user()->hasRole(['Admin', 'Editor'])) {
                                             return $query->role(['Admin', 'Editor', 'Author']); // Only show staff, not business owners
                                         }
+
                                         return $query->where('id', auth()->id());
                                     })
-                                    ->default(fn() => auth()->id())
+                                    ->default(fn () => auth()->id())
                                     ->required(),
                                 Forms\Components\Select::make('categories')
                                     ->relationship('categories', 'name')
@@ -145,7 +149,7 @@ class ArticleResource extends Resource
                                     ->multiple()
                                     ->preload(),
                             ]),
-                            
+
                         Forms\Components\Section::make('Mentions')
                             ->description('Tag local businesses mentioned in this article.')
                             ->schema([
@@ -174,6 +178,13 @@ class ArticleResource extends Resource
                     ->searchable()
                     ->weight('bold')
                     ->limit(50),
+                Tables\Columns\TextColumn::make('categories.name')
+                    ->label('Categories')
+                    ->badge()
+                    ->separator(', ')
+                    ->limitList(2)
+                    ->color('warning')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('author.name')
                     ->searchable()
                     ->sortable()
@@ -202,6 +213,10 @@ class ArticleResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
+                Tables\Filters\SelectFilter::make('categories')
+                    ->relationship('categories', 'name')
+                    ->multiple()
+                    ->preload(),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'draft' => 'Draft',
@@ -216,11 +231,43 @@ class ArticleResource extends Resource
                     ->label('Featured Only'),
             ])
             ->actions([
+                Tables\Actions\Action::make('auto_categorize')
+                    ->label('Categorize')
+                    ->icon('heroicon-o-sparkles')
+                    ->color('warning')
+                    ->tooltip('Auto-detect category from content')
+                    ->action(function (Article $record) {
+                        $cats = app(ArticleCategorizerService::class)->categorize($record);
+                        $names = $record->fresh()->categories->pluck('name')->join(', ');
+                        Notification::make()
+                            ->title('Article Categorized')
+                            ->body($names ? "Assigned: {$names}" : 'No specific category matched (assigned default).')
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('auto_categorize_selected')
+                        ->label('Auto-Categorize Selected')
+                        ->icon('heroicon-o-sparkles')
+                        ->color('warning')
+                        ->action(function (Collection $records) {
+                            $service = app(ArticleCategorizerService::class);
+                            $count = 0;
+                            foreach ($records as $record) {
+                                $service->categorize($record);
+                                $count++;
+                            }
+                            Notification::make()
+                                ->title('Bulk Categorization Complete')
+                                ->body("Successfully categorized {$count} articles.")
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
