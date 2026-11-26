@@ -25,9 +25,8 @@
                 <!-- Desktop Nav -->
                 <nav class="hidden md:flex items-center space-x-5 lg:space-x-7 font-sans font-bold text-xs uppercase tracking-widest relative z-50">
                     <a href="{{ route('home') }}" class="py-2 transition-all relative {{ request()->routeIs('home') ? 'text-ink font-black after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-city-accent after:rounded-full' : 'text-gray-700 hover:text-ink' }}">Home</a>
-                    <a href="{{ route('blog') }}" class="py-2 transition-all relative {{ request()->routeIs('blog') ? 'text-ink font-black after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-city-accent after:rounded-full' : 'text-gray-700 hover:text-ink' }}">Blog</a>
-                    
-                    <!-- Categories Dropdown -->
+
+                    <!-- Categories Dropdown (News) -->
                     <div x-data="{ open: false }" @mouseleave="open = false" class="relative">
                         <button @mouseenter="open = true" @click="open = !open" class="text-gray-700 hover:text-ink transition-colors flex items-center gap-1 focus:outline-none py-2 font-bold text-xs uppercase tracking-widest">
                             News
@@ -50,9 +49,11 @@
                         </div>
                     </div>
 
+                    <a href="{{ route('blog') }}" class="py-2 transition-all relative {{ request()->routeIs('blog') ? 'text-ink font-black after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-city-accent after:rounded-full' : 'text-gray-700 hover:text-ink' }}">Blog</a>
+
+                    <a href="{{ route('directory') }}" class="py-2 transition-all relative {{ request()->routeIs('directory*') ? 'text-ink font-black after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-city-accent after:rounded-full' : 'text-gray-700 hover:text-ink' }}">Businesses</a>
+
                     <a href="{{ route('home') }}#trending" class="py-2 text-gray-700 hover:text-ink transition-colors">Trending</a>
-                    
-                    <a href="{{ route('directory') }}" class="py-2 transition-all relative {{ request()->routeIs('directory*') ? 'text-ink font-black after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-city-accent after:rounded-full' : 'text-gray-700 hover:text-ink' }}">Directory</a>
                     
                     @auth
                         @if(auth()->user()->hasRole(['Admin', 'Editor', 'Author']))
@@ -69,8 +70,8 @@
             <!-- Right Side: Search / List Business / Mobile Menu -->
             <div class="flex items-center space-x-3.5 relative z-50">
                 <!-- CTA Button -->
-                <a href="{{ route('directory') }}" class="hidden md:inline-flex items-center gap-1.5 bg-city-accent hover:bg-yellow-300 text-ink font-black px-4 py-2 rounded-full border border-yellow-300 shadow-sm transition-all text-xs tracking-wider uppercase font-sans hover:shadow-md hover:-translate-y-0.5">
-                    List Business
+                <a href="{{ route('directory.register') }}" class="hidden md:inline-flex items-center gap-1.5 bg-city-accent hover:bg-yellow-300 text-ink font-black px-4 py-2 rounded-full border border-yellow-300 shadow-sm transition-all text-xs tracking-wider uppercase font-sans hover:shadow-md hover:-translate-y-0.5">
+                    + List Business
                 </a>
                 
                 <button type="button" @click="$dispatch('open-search')" aria-label="Search" class="p-2 rounded-full text-gray-600 hover:text-ink hover:bg-gray-100 transition-colors">
@@ -102,7 +103,7 @@
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
                 <a href="{{ route('home') }}#trending" class="text-ink hover:text-amber-700 transition-colors text-lg border-b border-newsprint pb-2">Trending</a>
-                <a href="{{ route('directory') }}" class="text-directory-blue hover:opacity-80 transition-opacity text-lg border-b border-newsprint pb-2 {{ request()->routeIs('directory*') ? 'font-bold' : '' }}">Local Businesses</a>
+                <a href="{{ route('directory') }}" class="text-directory-blue hover:opacity-80 transition-opacity text-lg border-b border-newsprint pb-2 {{ request()->routeIs('directory*') ? 'font-bold' : '' }}">Businesses</a>
                 
                 @auth
                     @if(auth()->user()->hasRole(['Admin', 'Editor', 'Author']))
@@ -114,8 +115,8 @@
                     <a href="{{ route('login') }}" class="text-ink hover:text-amber-700 transition-colors text-lg border-b border-newsprint pb-2">Log In</a>
                 @endauth
                 
-                <a href="{{ route('directory') }}" class="bg-city-accent text-ink text-center px-4 py-3 rounded-lg hover:bg-yellow-300 border border-yellow-300 transition-colors shadow-sm font-black tracking-widest uppercase text-sm mt-4">
-                    List Your Business
+                <a href="{{ route('directory.register') }}" class="bg-city-accent text-ink text-center px-4 py-3 rounded-lg hover:bg-yellow-300 border border-yellow-300 transition-colors shadow-sm font-black tracking-widest uppercase text-sm mt-4">
+                    + List Your Business
                 </a>
             </nav>
         </div>

@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 text-sm text-gray-600">
-        <h2 class="text-xl font-bold text-gray-900 mb-2">Welcome to Indore Mag!</h2>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Welcome to Ujjain 734!</h2>
         <p>You have been invited to join the team. Please set a password for your account (<strong>{{ $user->email }}</strong>) to get started.</p>
     </div>
 

@@ -6,7 +6,7 @@
             <span class="inline-block py-1 px-3 rounded-full bg-city-accent text-white text-xs font-bold font-sans uppercase tracking-wider mb-4">Directory Submissions</span>
             <h1 class="font-display font-black text-5xl md:text-6xl text-white mb-6">Put Your Business on the Map</h1>
             <p class="font-sans text-xl text-gray-300 max-w-2xl mx-auto font-light">
-                Join Indore's most curated local directory. Submit your details below for our editorial team to review and feature your business.
+                Join Ujjain's most curated local directory. Submit your details below for our editorial team to review and feature your business.
             </p>
         </div>
     </div>
@@ -72,7 +72,7 @@
                                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                             <svg class="h-5 w-5 text-gray-400 group-focus-within:text-city-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                         </div>
-                                        <input type="text" wire:model="address" id="address" placeholder="e.g. 123 MG Road, Indore" class="w-full pl-11 rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
+                                        <input type="text" wire:model="address" id="address" placeholder="e.g. Freeganj, Ujjain" class="w-full pl-11 rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
                                     </div>
                                     @error('address') <span class="text-red-500 text-xs font-sans mt-2 block font-medium">{{ $message }}</span> @enderror
                                 </div>
@@ -80,7 +80,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="group">
                                         <label for="latitude_input" class="block font-sans font-bold text-sm text-ink mb-2 group-focus-within:text-city-accent transition-colors">Latitude <span class="text-city-accent">*</span></label>
-                                        <input type="text" wire:model="lat" id="latitude_input" placeholder="e.g. 22.7196" class="w-full rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
+                                        <input type="text" wire:model="lat" id="latitude_input" placeholder="e.g. 23.1765" class="w-full rounded-lg border-gray-200 bg-white px-4 py-3 text-ink focus:border-city-accent focus:ring-2 focus:ring-city-accent/20 transition-all font-sans shadow-sm">
                                         <p class="text-xs text-gray-500 mt-2 font-sans italic"><a href="https://support.google.com/maps/answer/18539" target="_blank" class="text-directory-blue hover:underline">How to find your coordinates?</a></p>
                                         @error('lat') <span class="text-red-500 text-xs font-sans mt-2 block font-medium">{{ $message }}</span> @enderror
                                     </div>

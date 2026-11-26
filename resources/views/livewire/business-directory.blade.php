@@ -99,7 +99,7 @@
                                         
                                         <!-- Address / Neighborhood -->
                                         <div class="text-sm text-gray-500 font-sans leading-relaxed line-clamp-2">
-                                            {{ $business->neighborhoods->first()?->name ?? 'Indore' }} &middot; {{ $business->address }}
+                                            {{ $business->neighborhoods->first()?->name ?? 'Ujjain' }} &middot; {{ $business->address }}
                                         </div>
                                     </div>
                                     

@@ -7,8 +7,7 @@
         />
     @endif
 
-    <!-- Neighborhoods Strip & Breaking News Ticker (Top Hero Elements) -->
-    <x-neighborhood-strip :neighborhoods="$neighborhoods" />
+    <!-- Breaking News Ticker (Top Hero Elements) -->
     @livewire('news-ticker')
 
     <!-- Hero Carousel Section -->

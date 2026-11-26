@@ -18,8 +18,8 @@
             markersLayer: null,
             
             init() {
-                // Initialize map centered on Indore
-                this.map = L.map('map').setView([22.7196, 75.8577], 13);
+                // Initialize map centered on Ujjain
+                this.map = L.map('map').setView([23.1765, 75.7885], 13);
                 
                 // Add standard OpenStreetMap tiles
                 // Note: The standard tile.openstreetmap.org server prohibits heavy/bulk traffic and can rate-limit without warning.
