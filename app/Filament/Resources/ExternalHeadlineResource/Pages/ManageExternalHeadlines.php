@@ -26,7 +26,7 @@ class ManageExternalHeadlines extends ManageRecords
                     if (function_exists('set_time_limit')) {
                         @set_time_limit(300);
                     }
-                    Artisan::call('app:fetch-external-headlines');
+                    Artisan::call('app:fetch-headlines');
                     Notification::make()
                         ->title('Live News Updated')
                         ->body('Fetched and categorized latest news headlines.')

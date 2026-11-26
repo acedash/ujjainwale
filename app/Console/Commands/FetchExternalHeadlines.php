@@ -16,6 +16,13 @@ class FetchExternalHeadlines extends Command
     protected $signature = 'app:fetch-headlines';
 
     /**
+     * The console command aliases.
+     *
+     * @var array<int, string>
+     */
+    protected $aliases = ['app:fetch-external-headlines'];
+
+    /**
      * The console command description.
      *
      * @var string
