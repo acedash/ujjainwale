@@ -42,8 +42,13 @@
                              x-transition:leave-end="opacity-0 translate-y-2"
                              class="absolute top-full left-0 w-52 pt-2">
                             <div class="bg-white rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.12)] border border-gray-100 p-2 flex flex-col gap-1 relative z-50">
-                                @foreach(\App\Models\Category::take(5)->get() as $category)
-                                    <a href="{{ route('categories.show', $category) }}" class="px-3.5 py-2 hover:bg-amber-50/70 hover:text-amber-900 text-gray-700 text-xs font-semibold rounded-lg transition-colors">{{ $category->name }}</a>
+                                @foreach(\App\Models\Category::whereIn('type', ['news', 'both'])->whereNotIn('slug', ['makhapashhatha'])->orderByRaw("slug = 'ujjain-news' DESC, name ASC")->take(6)->get() as $category)
+                                    <a href="{{ route('categories.show', $category) }}" class="px-3.5 py-2 hover:bg-amber-50/70 hover:text-amber-900 text-gray-700 text-xs font-semibold rounded-lg transition-colors flex items-center justify-between">
+                                        <span>{{ $category->name }}</span>
+                                        @if($category->slug === 'ujjain-news')
+                                            <span class="text-[9px] bg-red-100 text-red-700 font-bold px-1.5 py-0.2 rounded uppercase">Live</span>
+                                        @endif
+                                    </a>
                                 @endforeach
                             </div>
                         </div>

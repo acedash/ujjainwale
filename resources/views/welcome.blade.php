@@ -797,15 +797,15 @@
                                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
                             </span>
                             <span class="text-[10px] font-sans font-black uppercase tracking-widest text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
-                                Live Aggregated Updates &middot; ताज़ा सुर्खियां
+                                उज्जैन समाचार &middot; Live Local Updates
                             </span>
                         </div>
                         <h2 class="font-display font-black text-2xl md:text-3xl text-ink uppercase tracking-tight">
                             Latest Ujjain Headlines
                         </h2>
                     </div>
-                    <a href="{{ route('external.index') }}" class="inline-flex items-center gap-1 font-sans font-bold text-xs text-amber-900 hover:text-amber-700 bg-amber-200/70 hover:bg-amber-200 px-4 py-2 rounded-xl transition-all border border-amber-300 shadow-sm self-start sm:self-auto">
-                        View All Trending News &rarr;
+                    <a href="{{ route('external.index', ['category' => 'ujjain-news']) }}" class="inline-flex items-center gap-1 font-sans font-bold text-xs text-amber-900 hover:text-amber-700 bg-amber-200/70 hover:bg-amber-200 px-4 py-2 rounded-xl transition-all border border-amber-300 shadow-sm self-start sm:self-auto">
+                        View All Ujjain News &rarr;
                     </a>
                 </div>
 
@@ -815,7 +815,12 @@
                             <div>
                                 @if($headline->thumbnail_url)
                                     <div class="h-44 -mx-5 -mt-5 mb-4 overflow-hidden rounded-t-2xl bg-gray-100">
-                                        <img src="{{ $headline->thumbnail_url }}" alt="{{ $headline->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <img src="{{ $headline->thumbnail_url }}" 
+                                             alt="{{ $headline->title }}" 
+                                             loading="lazy" 
+                                             referrerpolicy="no-referrer"
+                                             onerror="this.onerror=null; this.src='{{ asset('images/ujjain-wale.jpeg') }}';"
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                     </div>
                                 @endif
                                 <div class="flex items-center gap-2 mb-2 flex-wrap">

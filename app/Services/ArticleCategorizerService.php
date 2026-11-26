@@ -14,6 +14,25 @@ class ArticleCategorizerService
      * @var array<string, array{slug: string, keywords: array<string>, legacy?: array<string>}>
      */
     protected array $rules = [
+        'उज्जैन समाचार' => [
+            'slug' => 'ujjain-news',
+            'keywords' => [
+                'उज्जैन', 'ujjain', 'महाकाल', 'mahakal', 'महाकालेश्वर', 'शिप्रा', 'क्षिप्रा', 'kshipra', 'shipra',
+                'रामघाट', 'सिंहस्थ', 'सिंहास्थ', 'simhastha', 'कालभैरव', 'हरसिद्धि', 'मंगलनाथ', 'चिंतामण',
+                'चिंतामन', 'गदकालिका', 'सिद्धवट', 'भर्तृहरि', 'विक्रमादित्य', 'विक्रम विश्वविद्यालय',
+                'कालिदास अकादमी', 'त्रिवेणी', 'सांदीपनि', 'वेधशाला', 'जंतर मंतर', 'कोठी पैलेस', 'कोठी चौराहा',
+                'टावर चौराहा', 'टावर चौक', 'फ्रीगंज', 'freeganj', 'नानाखेड़ा', 'nanakheda', 'माधव नगर',
+                'चिमनगंज', 'मक्सी रोड', 'देवास गेट', 'आगर रोड', 'इंदौर रोड', 'बड़नगर', 'खाचरौद',
+                'महिदपुर', 'तराना', 'घट्टिया', 'नागदा', 'उज्जैन नगर निगम', 'स्मार्ट सिटी उज्जैन',
+                'कलेक्टर उज्जैन', 'एसपी उज्जैन', 'उज्जैन पुलिस', 'उज्जैन जंक्शन', 'उन्हेल', 'दत्त अखाड़ा',
+                'चरक भवन', 'माधव कॉलेज', 'इस्कॉन उज्जैन', 'त्रिवेणी संग्रहालय',
+            ],
+            'legacy' => [
+                'उज्जैन>शहर की हलचल',
+                'उज्जैन>आपकी आवाज',
+                'उज्जैन>प्रमुख दूरभाष क्रमांक',
+            ],
+        ],
         'धर्म एवं संस्कृति' => [
             'slug' => 'dharma-culture',
             'keywords' => [
@@ -300,9 +319,9 @@ class ArticleCategorizerService
                 continue;
             }
 
-            // Include secondary category if it has strong signal (score >= 6 and >= 25% of top score)
-            // Limit to at most 2 top categories for clarity and focus
-            if (count($selectedIds) < 2 && $score >= 6 && $score >= ($topScore * 0.25)) {
+            // Include secondary/tertiary category if it has strong signal (score >= 6 and >= 25% of top score)
+            // Limit to at most 3 top categories for clarity and focus
+            if (count($selectedIds) < 3 && $score >= 6 && $score >= ($topScore * 0.25)) {
                 $selectedIds[] = $catId;
             }
         }

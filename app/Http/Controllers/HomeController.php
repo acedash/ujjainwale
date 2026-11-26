@@ -38,9 +38,19 @@ class HomeController extends Controller
 
         $latestExternalNews = ExternalHeadline::with(['categories', 'newsSource'])
             ->whereNotIn('id', $featuredExternal->pluck('id'))
+            ->whereHas('categories', fn ($q) => $q->where('slug', 'ujjain-news'))
             ->latest('published_at')
             ->take(3)
             ->get();
+
+        if ($latestExternalNews->count() < 3) {
+            $fallbackExternal = ExternalHeadline::with(['categories', 'newsSource'])
+                ->whereNotIn('id', $featuredExternal->pluck('id')->merge($latestExternalNews->pluck('id')))
+                ->latest('published_at')
+                ->take(3 - $latestExternalNews->count())
+                ->get();
+            $latestExternalNews = $latestExternalNews->concat($fallbackExternal);
+        }
 
         // Merge: Blog Articles + External News sources
         $blogItems = $featuredArticles->concat($latestBlogArticles)->unique('id')->values();
@@ -73,9 +83,19 @@ class HomeController extends Controller
         // 2. Breaking News (Curated mix of top live news sources + editorial stories)
         $breakingExternal = ExternalHeadline::with(['categories', 'newsSource'])
             ->whereNotIn('id', $usedExternalIds)
+            ->whereHas('categories', fn ($q) => $q->where('slug', 'ujjain-news'))
             ->latest('published_at')
             ->take(4)
             ->get();
+
+        if ($breakingExternal->count() < 4) {
+            $fallbackBreaking = ExternalHeadline::with(['categories', 'newsSource'])
+                ->whereNotIn('id', array_merge($usedExternalIds, $breakingExternal->pluck('id')->toArray()))
+                ->latest('published_at')
+                ->take(4 - $breakingExternal->count())
+                ->get();
+            $breakingExternal = $breakingExternal->concat($fallbackBreaking);
+        }
 
         $breakingArticles = Article::published()
             ->with(['categories', 'author', 'media'])
@@ -142,12 +162,22 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        // 5. Top ticker, neighborhoods & latest external headlines
+        // 5. Top ticker, neighborhoods & latest external headlines (Prioritize Ujjain News)
         $neighborhoods = Neighborhood::orderBy('name')->get();
         $latestHeadlines = ExternalHeadline::with(['categories', 'newsSource'])
+            ->whereHas('categories', fn ($q) => $q->where('slug', 'ujjain-news'))
             ->latest('published_at')
             ->take(6)
             ->get();
+
+        if ($latestHeadlines->count() < 6) {
+            $fallbackHeadlines = ExternalHeadline::with(['categories', 'newsSource'])
+                ->whereNotIn('id', $latestHeadlines->pluck('id'))
+                ->latest('published_at')
+                ->take(6 - $latestHeadlines->count())
+                ->get();
+            $latestHeadlines = $latestHeadlines->concat($fallbackHeadlines)->take(6)->values();
+        }
 
         // 6. Admin-managed advertisements
         $advertisements = Advertisement::with('media')
