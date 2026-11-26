@@ -1,5 +1,5 @@
 <div x-data="{ mobileMenuOpen: false }">
-    <header class="py-3 px-6 md:px-10 sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300 shadow-sm">
+    <header class="py-2 md:py-2.5 px-6 md:px-10 sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300 shadow-sm">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <!-- Left Side: Logo, Branding, Weather, and Nav -->
             <div class="flex items-center gap-6 lg:gap-10">
@@ -7,9 +7,9 @@
                 <div class="flex items-center gap-4">
                     <a href="/" class="flex items-center relative z-50 group" aria-label="Ujjain Wale Home">
                         <img src="{{ asset('images/ujjain-wale.jpeg') }}" 
-                             alt="Ujjain Wale" 
+                             alt="Ujjain 734" 
                              onerror="if(!this.src.includes('/public/')){ this.src = this.src.replace('/images/', '/public/images/'); }"
-                             class="h-12 sm:h-14 md:h-16 w-auto rounded-xl shadow-xs border border-amber-300/80 group-hover:scale-105 transition-all duration-300">
+                             class="h-14 sm:h-16 md:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-xs">
                     </a>
                     
                     <!-- Weather / Date (Desktop only) -->
