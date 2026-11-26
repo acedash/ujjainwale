@@ -4,11 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExternalHeadlineResource\Pages;
 use App\Models\ExternalHeadline;
+use App\Services\HeadlineCategorizerService;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class ExternalHeadlineResource extends Resource
 {
@@ -22,7 +25,17 @@ class ExternalHeadlineResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('original_snippet')
+                    ->label('Summary / Snippet')
+                    ->rows(3)
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('thumbnail_url')
+                    ->label('Image URL')
+                    ->url()
+                    ->maxLength(500)
+                    ->columnSpanFull(),
                 Forms\Components\Select::make('categories')
                     ->relationship('categories', 'name')
                     ->multiple()
@@ -75,6 +88,20 @@ class ExternalHeadlineResource extends Resource
                     ->label('Featured Only'),
             ])
             ->actions([
+                Tables\Actions\Action::make('auto_categorize')
+                    ->label('Categorize')
+                    ->icon('heroicon-o-sparkles')
+                    ->color('warning')
+                    ->tooltip('Auto-detect categories from title and snippet')
+                    ->action(function (ExternalHeadline $record) {
+                        $cats = app(HeadlineCategorizerService::class)->categorize($record);
+                        $names = $record->fresh()->categories->pluck('name')->join(', ');
+                        Notification::make()
+                            ->title('Headline Categorized')
+                            ->body($names ? "Assigned: {$names}" : 'No specific category matched.')
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Actions\Action::make('view_original')
                     ->label('Original URL')
                     ->icon('heroicon-o-arrow-top-right-on-square')
@@ -85,6 +112,24 @@ class ExternalHeadlineResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('auto_categorize_selected')
+                        ->label('Auto-Categorize Selected')
+                        ->icon('heroicon-o-sparkles')
+                        ->color('warning')
+                        ->action(function (Collection $records) {
+                            $service = app(HeadlineCategorizerService::class);
+                            $count = 0;
+                            foreach ($records as $record) {
+                                $service->categorize($record);
+                                $count++;
+                            }
+                            Notification::make()
+                                ->title('Bulk Categorization Complete')
+                                ->body("Successfully categorized {$count} headlines.")
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

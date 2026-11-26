@@ -7,6 +7,7 @@ use App\Services\HeadlineCategorizerService;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Support\Facades\Artisan;
 
 class ManageExternalHeadlines extends ManageRecords
 {
@@ -15,25 +16,44 @@ class ManageExternalHeadlines extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('auto_categorize')
-                ->label('Auto-Categorize Headlines')
-                ->icon('heroicon-o-sparkles')
-                ->color('warning')
-                ->requiresConfirmation()
-                ->modalHeading('Auto-Categorize Headlines')
-                ->modalDescription('Scan and categorize all headlines using Ujjain local news keywords (Mahakal, Dharma, City, Crime, Politics, Business, Weather, Sports).')
+            Actions\Action::make('fetch_news')
+                ->label('Fetch Live News')
+                ->icon('heroicon-o-arrow-path')
+                ->color('info')
+                ->tooltip('Fetch new articles from configured RSS feeds')
                 ->action(function () {
                     ini_set('max_execution_time', '300');
                     if (function_exists('set_time_limit')) {
                         @set_time_limit(300);
                     }
-                    $count = app(HeadlineCategorizerService::class)->categorizeAll(onlyUncategorized: true);
+                    Artisan::call('app:fetch-external-headlines');
                     Notification::make()
-                        ->title('Categorization Complete')
-                        ->body("Categorized {$count} headlines successfully.")
+                        ->title('Live News Updated')
+                        ->body('Fetched and categorized latest news headlines.')
                         ->success()
                         ->send();
                 }),
+
+            Actions\Action::make('auto_categorize')
+                ->label('Auto-Categorize All Headlines')
+                ->icon('heroicon-o-sparkles')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalHeading('Auto-Categorize All Headlines')
+                ->modalDescription('Scan all headlines to detect "उज्जैन समाचार" (Ujjain News), Mahakal/Dharma, Crime, Politics, Business, Weather, and Sports.')
+                ->action(function () {
+                    ini_set('max_execution_time', '300');
+                    if (function_exists('set_time_limit')) {
+                        @set_time_limit(300);
+                    }
+                    $count = app(HeadlineCategorizerService::class)->categorizeAll(onlyUncategorized: false);
+                    Notification::make()
+                        ->title('Categorization Complete')
+                        ->body("Successfully categorized {$count} headlines.")
+                        ->success()
+                        ->send();
+                }),
+
             Actions\CreateAction::make(),
         ];
     }
